@@ -53,15 +53,15 @@ class Submarino(object):
 
 
     def forward(self, valor):
-        self.x += int(valor)
-        self.y += int(valor) * self.aim        
+        self.posicao_x += int(valor)
+        self.posicao_y += int(valor) * self.posicao_aim        
 
     def down(self, valor):
-        self.aim += int(valor)
+        self.posicao_aim += int(valor)
         
 
     def up(self, valor):
-        self.aim -= int(valor)
+        self.posicao_aim -= int(valor)
 
     def movimenta(self, lista):
         for item in lista:
