@@ -1,6 +1,9 @@
 """Advent of Code 2021 do site 'https://adventofcode.com/'."""
 
 
+from typing import Dict
+
+
 class Submarino(object):
     """A classe submarino, implementa as funções comuns entre outras."""
     def __init__(self):
@@ -52,18 +55,18 @@ class Submarino(object):
         return relatorio.count(ocorrencia)
 
 
-    def forward(self, valor):
+    def forward(self, valor: str) -> None:
         self.posicao_x += int(valor)
         self.posicao_y += int(valor) * self.posicao_aim        
 
-    def down(self, valor):
+    def down(self, valor: str) -> None:
         self.posicao_aim += int(valor)
         
 
-    def up(self, valor):
+    def up(self, valor: str) -> None:
         self.posicao_aim -= int(valor)
 
-    def movimenta(self, lista):
+    def movimenta(self, lista: list) -> None:
         for item in lista:
             direcao, valor = item.split(" ")
             if direcao == "forward":
@@ -73,45 +76,58 @@ class Submarino(object):
             elif direcao == "down":
                 self.down(valor)
 
-if __name__ == "__main__":
+    def separa_bit_do_diagnostico(self, bits: str) -> list:
+        """Individualiza os bits da cadeia e forma um dicionario"""
 
-    estrela1 = 8
-    estrela2 = 34
-    print()
-    print("*" * estrela2)
-    print("*" * estrela1, "Dia 1 - Parte 1.", "*" * estrela1)
-    print("*" * estrela2)
-    print()
+        return list(map(int, list(bits)))
 
 
-    submarino = Submarino()
-    arquivo = "assets/input.txt"
-    lista = submarino.le_arquivo(arquivo)
-    relatorio = submarino.sonar(lista)
-    resultado = submarino.sonar_contagem_de_ocorrencia(relatorio, "aumentou")
-    print(f"O valor do relatório aumentou {resultado} vezes.")
+    def consolidar_relatorio(self, relatorio: list) -> dict:
+        """Consolida os valores dos bits."""
+        
+        quantidade_bits = len(relatorio[0])
+        lista_bit = {}
+        for index in range(quantidade_bits):
+            lista_bit[f"bit_{index}"] = 0
 
-    print()
-    print("*" * estrela2)
-    print("*" * estrela1, "Dia 1 - Parte 2.", "*" * estrela1)
-    print("*" * estrela2)
-    print()
 
-    lista_filtro_medidas = submarino.sonar_filtro(lista)
-    relatorio = submarino.sonar(lista_filtro_medidas)
-    resultado = submarino.sonar_contagem_de_ocorrencia(relatorio, "aumentou")
-    print(f"Após o filtro o valor aumentou {resultado} vezes.")
+        for item in relatorio:
+            for posicao, bit in enumerate(list(map(int, list(item)))):
+                if bit:
+                    lista_bit[f"bit_{quantidade_bits - posicao - 1}"] += 1
+
+        for bits in lista_bit:
+            if lista_bit[bits] > len(relatorio) * 0.5:
+                lista_bit[bits] = 1
+            else:
+                lista_bit[bits] = 0
+        
+        return lista_bit
+
+
+    def calcula_gamma(self, consolidado: dict) -> int:
+
+        
+        gamma = 0
+        
+
+
+        for indice in consolidado:
+            
+            gamma += consolidado[indice] * 2 ** int(indice.split("_")[-1])
+        
+        return gamma
     
-    estrela3 = 13
-    print()
-    print("*" * estrela2)
-    print("*" * estrela3, "Dia 2.", "*" * estrela3)
-    print("*" * estrela2)
-    print()
+    def calcula_epsilon(self, consolidado: dict) -> int:
 
-    lista_de_movimento = submarino.le_arquivo("assets/day2.txt")
-    submarino.movimenta(lista_de_movimento)
-    posicao = (submarino.posicao_x, submarino.posicao_y)
-    produto_da_posicao = submarino.posicao_x * submarino.posicao_y
+        epsilon = 0
 
-    print(f"A posição do submarino é {str(posicao)} e o seu produto é {produto_da_posicao}")
+        for indice in consolidado:
+            if consolidado[indice]:
+                consolidado[indice] = 0
+            else:
+                consolidado[indice] = 1
+            
+            epsilon += consolidado[indice] * 2 ** int(indice.split("_")[-1])
+
+        return epsilon

@@ -122,4 +122,39 @@ def test_gerar_relatorio_do_test_filtrado_pela_soma_dos_tres_valores():
     
     assert  submarino.sonar(lista_resultado) == ["N/A", "aumentou", "nao mudou", "diminuiu", "aumentou", "aumentou", "aumentou", "aumentou"]
 
-    
+def test_ao_receber_um_conjunto_de_bit_deve_segregar_os_bits():
+    submarino = Submarino()
+    entrada = "10100"
+    saida = [1, 0, 1, 0, 0]
+
+    dicionario = submarino.separa_bit_do_diagnostico(entrada)
+
+    assert dicionario == saida
+
+def test_quando_receber_uma_lista_de_bits_deve_consolidar_e_retornar_o_bit_mais_frequente_para_cada_posicao():
+        
+    submarino=Submarino()
+    relatorio_teste = submarino.le_arquivo("assets/diagnostico_exemplo.txt")
+    resultado = {"bit_0": 0, "bit_1": 1, "bit_2": 1, "bit_3": 0, "bit_4": 1}
+
+    dicionario = submarino.consolidar_relatorio(relatorio_teste)
+
+    assert dicionario == resultado
+
+def test_quando_receber_o_consolidado_calcular_gamma():
+    submarino=Submarino()
+    consolidado = {"bit_0": 0, "bit_1": 1, "bit_2": 1, "bit_3": 0, "bit_4": 1}
+
+    gamma = submarino.calcula_gamma(consolidado)
+
+    assert gamma == 22
+
+def test_quando_receber_o_consolidado_calcular_epsilon():
+    submarino=Submarino()
+    consolidado = {"bit_0": 0, "bit_1": 1, "bit_2": 1, "bit_3": 0, "bit_4": 1}
+
+    gamma = submarino.calcula_epsilon(consolidado)
+
+    assert gamma == 9
+
+
