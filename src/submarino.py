@@ -99,6 +99,10 @@ class Submarino(object):
         for bits in lista_bit:
             if lista_bit[bits] > len(relatorio) * 0.5:
                 lista_bit[bits] = 1
+            
+            elif lista_bit[bits] == len(relatorio) * 0.5:
+                lista_bit[bits] = 1     
+            
             else:
                 lista_bit[bits] = 0
         
@@ -106,16 +110,9 @@ class Submarino(object):
 
 
     def calcula_gamma(self, consolidado: dict) -> int:
-
-        
         gamma = 0
-        
-
-
         for indice in consolidado:
-            
             gamma += consolidado[indice] * 2 ** int(indice.split("_")[-1])
-        
         return gamma
     
     def calcula_epsilon(self, consolidado: dict) -> int:
@@ -131,3 +128,36 @@ class Submarino(object):
             epsilon += consolidado[indice] * 2 ** int(indice.split("_")[-1])
 
         return epsilon
+
+    def dividir_lista(self, relatorio: list, bit_change: str) -> list:
+        resultado = [i for i in relatorio if bit_change == i[:len(bit_change)]]
+        return resultado
+
+    def calcular_gerador_oxigenio(self, relatorio:list, comum_bit: str = "") -> int:
+
+        if len(relatorio) == 1:
+            resultado_consolidado = self.consolidar_relatorio(relatorio)
+            return self.calcula_gamma(resultado_consolidado)
+        
+        else:
+            consolidado = self.consolidar_relatorio(relatorio)
+            comum_bit += str(consolidado[f"bit_{len(consolidado) - 1 - len(comum_bit)}"])
+            novo_consolidado = self.dividir_lista(relatorio, comum_bit)
+            return self.calcular_gerador_oxigenio(novo_consolidado, comum_bit)
+
+
+
+    def calcular_purificador_de_CO2(self, relatorio:list, comum_bit: str = "") -> int:
+
+        if len(relatorio) == 1:
+            resultado_consolidado = self.consolidar_relatorio(relatorio)
+            return self.calcula_gamma(resultado_consolidado)
+        
+        else:
+            consolidado = self.consolidar_relatorio(relatorio) 
+            if consolidado[f"bit_{len(consolidado) - 1 - len(comum_bit)}"]:
+                comum_bit += "0"
+            else:
+                comum_bit += "1"
+            novo_consolidado = self.dividir_lista(relatorio, comum_bit)
+            return self.calcular_purificador_de_CO2(novo_consolidado, comum_bit)

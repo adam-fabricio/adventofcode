@@ -157,4 +157,40 @@ def test_quando_receber_o_consolidado_calcular_epsilon():
 
     assert gamma == 9
 
+def test_quando_receber_o_consolidado_calcular_o_gerador_de_oxigenio():
+    submarino=Submarino()
+    relatorio_diagonostico = submarino.le_arquivo("assets/diagnostico_exemplo.txt")
+    
+    gerador_oxigenio = submarino.calcular_gerador_oxigenio(relatorio_diagonostico)
+    
+    assert gerador_oxigenio == 23
 
+
+def test_quando_receber_uma_string_deve_dividir_a_lista():
+    entrada_string = "1"
+    resultado = ["11110", "10110", "10111", "10101", "11100", "10000", "11001"]
+
+
+    submarino = Submarino()
+    relatorio_diagonostico = submarino.le_arquivo("assets/diagnostico_exemplo.txt")
+    lista_nova = submarino.dividir_lista(relatorio_diagonostico, entrada_string)
+
+    assert lista_nova == resultado
+
+def test_quando_receber_uma_string_deve_dividir_a_lista_2():
+    entrada_string = "10"
+    resultado = ["10110", "10111", "10101","10000"]
+
+    submarino = Submarino()
+    relatorio_diagonostico = submarino.le_arquivo("assets/diagnostico_exemplo.txt")
+    lista_nova = submarino.dividir_lista(relatorio_diagonostico, entrada_string)
+
+    assert lista_nova == resultado
+
+def test_quando_receber_o_relatorio_calcular_o_purificador_de_CO2():
+    submarino=Submarino()
+    relatorio_diagonostico = submarino.le_arquivo("assets/diagnostico_exemplo.txt")
+    
+    purificador_CO2 = submarino.calcular_purificador_de_CO2(relatorio_diagonostico)
+    
+    assert purificador_CO2 == 10

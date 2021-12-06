@@ -64,3 +64,10 @@ if __name__ == "__main__":
     print("*" * estrela1, "Dia 3 - Parte 2.", "*" * estrela1)
     print("*" * estrela2)
     print()
+
+    gerador_de_oxigenio = submarino.calcular_gerador_oxigenio(relatorio_diagonostico)
+    purificador_de_CO2 = submarino.calcular_purificador_de_CO2(relatorio_diagonostico)
+
+    print(f"O valor do gerador de oxigenio é: {gerador_de_oxigenio}.")
+    print(f"O valor do purificador de CO2 é: {purificador_de_CO2}.")
+    print(f"O valor de oxigênio gerado é: {gerador_de_oxigenio * purificador_de_CO2}.")
