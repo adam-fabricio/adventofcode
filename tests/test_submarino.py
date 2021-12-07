@@ -1,4 +1,5 @@
-from src.submarino import Submarino
+from src.submarino import (Submarino, 
+                           Cartela)
 import pytest
 
 def test_quando_ler_arquivo_retornar_uma_lista_de_movimento():
@@ -194,3 +195,42 @@ def test_quando_receber_o_relatorio_calcular_o_purificador_de_CO2():
     purificador_CO2 = submarino.calcular_purificador_de_CO2(relatorio_diagonostico)
     
     assert purificador_CO2 == 10
+
+
+def test_quando_passar_dados_deve_gerar_lista_de_numeros_sorteados():
+    submarino = Submarino()
+    caminho = "assets/bingo_test.txt"
+    dados_bingo = submarino.le_arquivo(caminho)
+    numeros_sorteados = submarino.bingo.gera_numeros_sorteados(dados_bingo)
+    resultado_test = [7,4,9,5,11,17,23,2,0,14,21,24,10,16,13,6,15,25,12,22,18,20,8,19,3,26,1]
+
+    for i in range(len(numeros_sorteados)):
+        assert int(numeros_sorteados[i]) == resultado_test[i]
+
+def test_adicionar_linha_na_cartela_deve_adicionar_linha_a_cartela():
+    cartela = Cartela()
+    dados_teste = '22 13 17 11  0'
+    dados_teste2 = ' 8  2 23  4 24'
+
+    cartela.adicionar_linha(dados_teste)
+
+    assert cartela.cartela == [[22, 13, 17, 11, 0]]
+    
+    cartela.adicionar_linha(dados_teste2)
+
+    assert cartela.cartela == [[22, 13, 17, 11, 0], [8,  2, 23,  4, 24]]
+
+def test_ao_passar_os_dados_deve_cirar_as_cartelas():
+    submarino = Submarino()
+    caminho = "assets/bingo_test.txt"
+    dados_bingo = submarino.le_arquivo(caminho)
+    cartela = []
+    cartela.append([[22, 13, 17, 11,  0], [ 8,  2, 23,  4, 24], [21,  9, 14, 16,  7], [6, 10,  3,  18,  5], [ 1, 12, 20, 15, 19]])
+    cartela.append([[ 3, 15,  0,  2, 22], [ 9, 18, 13, 17,  5], [19,  8,  7, 25, 23], [20, 11, 10, 24,  4], [14, 21, 16, 12,  6]])
+    cartela.append([[14, 21, 17, 24,  4], [10, 16, 15,  9, 19], [18,  8, 23, 26, 20], [22, 11, 13,  6,  5], [ 2,  0, 12,  3,  7]])
+
+    submarino.bingo.criar_cartelas(dados_bingo)
+
+    for i in range(len(submarino.bingo.cartelas)):
+        assert submarino.bingo.cartelas[i].cartela == cartela[i]
+

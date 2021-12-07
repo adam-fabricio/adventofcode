@@ -12,6 +12,7 @@ class Submarino(object):
         self.posicao_x = 0
         self.posicao_y = 0
         self.posicao_aim = 0
+        self.bingo = Bingo()
 
 
     def le_arquivo(self, caminho: str) -> list:
@@ -161,3 +162,46 @@ class Submarino(object):
                 comum_bit += "1"
             novo_consolidado = self.dividir_lista(relatorio, comum_bit)
             return self.calcular_purificador_de_CO2(novo_consolidado, comum_bit)
+
+
+class Cartela():
+
+    def __init__(self):
+        self.cartela = []
+
+    def adicionar_linha(self, linha: str) -> None:
+
+        self.cartela.append([int(i) for i in linha.split(" ") if i])
+    
+    
+
+class Bingo():
+
+    def __init__(self):
+        self.cartelas = []
+
+
+    def gera_numeros_sorteados(self, lista_bingo: list) -> list:
+        return lista_bingo[0].split(",")
+    
+    def criar_cartelas(self, lista_bingo: list) -> object:
+        for i in range(len(lista_bingo)):
+            if not i:
+                pass
+            elif i == len(lista_bingo) -1:
+                self.cartelas[-1].adicionar_linha(lista_bingo[i])
+            elif not lista_bingo[i] and lista_bingo[i+1]:
+                self.cartelas.append(Cartela())
+            
+            elif lista_bingo[i] and lista_bingo[i+1]:
+                self.cartelas[-1].adicionar_linha(lista_bingo[i])
+            
+            else:
+            #elif lista_bingo[i] and not lista_bingo[i+1]:
+                self.cartelas[-1].adicionar_linha(lista_bingo[i])
+                
+            
+
+
+
+            
