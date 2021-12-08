@@ -168,24 +168,48 @@ class Cartela():
 
     def __init__(self):
         self.cartela = []
+        self.ultima_posicao = False
+        self.bingo = 0
 
     def adicionar_linha(self, linha: str) -> None:
 
         self.cartela.append([int(i) for i in linha.split(" ") if i])
-    
-    
 
+    def marcar_numero(self, numero: int) -> None:
+        try:
+            linha, coluna = [(lin, col.index(numero)) for lin, col in enumerate(self.cartela) if numero in col][0]
+            self.cartela[linha][coluna] = -1
+            self.ultima_posicao = (linha, coluna)
+        except IndexError:
+            self.ultima_posicao = False
+        
+        if self.verifica_bingo():
+            self.bingo = self.somar_cartela() * numero
+            return True
+
+    def verifica_bingo(self) -> str:
+        if self.ultima_posicao:
+            if sum(self.cartela[self.ultima_posicao[0]]) == -5 or sum(list(zip(*self.cartela))[self.ultima_posicao[1]]) == -5:
+                return "BINGO"
+   
+    def somar_cartela(self) -> int:
+        return sum([num for row in self.cartela for num in row if num > -1])
+
+    
 class Bingo():
 
     def __init__(self):
         self.cartelas = []
-
+        self.resultado = 0
+        self.cartela_vencedora = []
+        self.resultado_vencedor = []
 
     def gera_numeros_sorteados(self, lista_bingo: list) -> list:
-        return lista_bingo[0].split(",")
+        return [int(i) for i in lista_bingo[0].split(",") if i]
     
     def criar_cartelas(self, lista_bingo: list) -> object:
         for i in range(len(lista_bingo)):
+        
             if not i:
                 pass
             elif i == len(lista_bingo) -1:
@@ -197,11 +221,29 @@ class Bingo():
                 self.cartelas[-1].adicionar_linha(lista_bingo[i])
             
             else:
-            #elif lista_bingo[i] and not lista_bingo[i+1]:
                 self.cartelas[-1].adicionar_linha(lista_bingo[i])
-                
             
+    def jogar(self, dados_do_bingo: list) -> int:
+        numeros_sorteados = self.gera_numeros_sorteados(dados_do_bingo)
+        self.criar_cartelas(dados_do_bingo)
+        for numero in numeros_sorteados:
+            for cartela in self.cartelas:
+                if cartela.marcar_numero(numero):
+                    self.resultado = cartela.bingo
+                    break
+            if self.resultado:
+                break
 
+    def jogar_2(self, dados_do_bingo: list) -> int:
+        numeros_sorteados = self.gera_numeros_sorteados(dados_do_bingo)
+        self.criar_cartelas(dados_do_bingo)
+        for numero in numeros_sorteados:
+            for i, cartela in enumerate(self.cartelas):
+                if cartela.marcar_numero(numero):
+                    if self.cartela_vencedora == []:
+                        self.cartela_vencedora.append(i)
+                        self.resultado_vencedor.append(cartela.bingo)
+                    elif not i in self.cartela_vencedora:
+                        self.cartela_vencedora.append(i)
+                        self.resultado_vencedor.append(cartela.bingo)
 
-
-            

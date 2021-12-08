@@ -71,3 +71,24 @@ if __name__ == "__main__":
     print(f"O valor do gerador de oxigenio é: {gerador_de_oxigenio}.")
     print(f"O valor do purificador de CO2 é: {purificador_de_CO2}.")
     print(f"O valor de oxigênio gerado é: {gerador_de_oxigenio * purificador_de_CO2}.")
+
+
+    estrela3 = 13
+    print()
+    print("*" * estrela2)
+    print("*" * estrela1, "Dia 4 - Parte 1.", "*" * estrela1)
+    print("*" * estrela2)
+    print()
+
+    dados_bingo = submarino.le_arquivo("assets/bingo.txt")
+    submarino.bingo.jogar(dados_bingo)
+    print(f"Resultado do bingo é {submarino.bingo.resultado}")
+    
+    print()
+    print("*" * estrela2)
+    print("*" * estrela1, "Dia 4 - Parte 2.", "*" * estrela1)
+    print("*" * estrela2)
+    print()
+    
+    submarino.bingo.jogar_2(dados_bingo)
+    print(f"Resultado do bingo é {submarino.bingo.resultado_vencedor[-1]}")

@@ -234,3 +234,109 @@ def test_ao_passar_os_dados_deve_cirar_as_cartelas():
     for i in range(len(submarino.bingo.cartelas)):
         assert submarino.bingo.cartelas[i].cartela == cartela[i]
 
+
+def test_quando_enviar_numero_sorteado_deve_substituir_o_valor_por_menos_um_caso_exista():
+    submarino = Submarino()
+    caminho = "assets/bingo_test.txt"
+    dados_bingo = submarino.le_arquivo(caminho)
+    submarino.bingo.criar_cartelas(dados_bingo)
+    cartela = []
+    cartela.append([[14, 21, -1, 24,  4], [10, 16, 15,  9, 19], [18,  8, 23, 26, 20], [22, 11, 13,  6,  5], [ 2,  0, 12,  3,  7]])
+    
+    submarino.bingo.cartelas[2].marcar_numero(17)
+
+    assert submarino.bingo.cartelas[2].cartela == cartela[0]
+
+
+def test_quando_marcar_numero_inexistente_deve_marcar_vazio():
+    submarino = Submarino()
+    caminho = "assets/bingo_test.txt"
+    dados_bingo = submarino.le_arquivo(caminho)
+    submarino.bingo.criar_cartelas(dados_bingo)
+
+    submarino.bingo.cartelas[0].marcar_numero(30)
+    
+    assert submarino.bingo.cartelas[0].ultima_posicao == False
+
+def test_quando_marcar_numero_existente_deve_salvar_posicao_tupla_linha_e_coluna():
+    submarino = Submarino()
+    caminho = "assets/bingo_test.txt"
+    dados_bingo = submarino.le_arquivo(caminho)
+    submarino.bingo.criar_cartelas(dados_bingo)
+
+    submarino.bingo.cartelas[0].marcar_numero(4)
+    
+    assert submarino.bingo.cartelas[0].ultima_posicao == (1, 3)
+
+
+def test_quando_marcar_todos_numeros_de_uma_linha_deve_retornar_bingo():
+    submarino = Submarino()
+    caminho = "assets/bingo_test.txt"
+    dados_bingo = submarino.le_arquivo(caminho)
+    submarino.bingo.criar_cartelas(dados_bingo)
+    numeros_sorteados = [8,  2, 31, 45, 76, 23,  4, 24]
+
+    for numero in numeros_sorteados:
+        submarino.bingo.cartelas[0].marcar_numero(numero)
+        if submarino.bingo.cartelas[0].verifica_bingo() == "BINGO":
+            resultado = "BINGO"
+        
+    assert resultado == "BINGO"
+
+
+def test_quando_marcar_todos_numeros_de_uma_coluna_deve_retornar_bingo():
+    submarino = Submarino()
+    caminho = "assets/bingo_test.txt"
+    dados_bingo = submarino.le_arquivo(caminho)
+    submarino.bingo.criar_cartelas(dados_bingo)
+    numeros_sorteados = [8,  6, 22, 45, 76, 21,  1, 24]
+
+    for numero in numeros_sorteados:
+        submarino.bingo.cartelas[0].marcar_numero(numero)
+        if submarino.bingo.cartelas[0].verifica_bingo() == "BINGO":
+            resultado = "BINGO"
+        
+    assert resultado == "BINGO"
+
+def test_quando_passar_chamar_funcao_deve_retornar_a_soma_dos_numeros_nao_marcados():
+    submarino = Submarino()
+    caminho = "assets/bingo_test.txt"
+    dados_bingo = submarino.le_arquivo(caminho)
+    submarino.bingo.criar_cartelas(dados_bingo)
+
+    assert submarino.bingo.cartelas[0].somar_cartela() == 300
+
+    submarino.bingo.cartelas[0].marcar_numero(2)
+
+    assert submarino.bingo.cartelas[0].somar_cartela() == 298
+
+    
+def test_quando_marcar_numero_e_der_bingo_deve_retornar_soma_dos_valores_nao_marcados_vezes_ultimo_valor():
+    submarino = Submarino()
+    caminho = "assets/bingo_test.txt"
+    dados_bingo = submarino.le_arquivo(caminho)
+    numeros_sorteados = submarino.bingo.gera_numeros_sorteados(dados_bingo)
+    submarino.bingo.criar_cartelas(dados_bingo)
+
+    for numero in numeros_sorteados:
+        if submarino.bingo.cartelas[2].marcar_numero((numero)):
+            break        
+    assert submarino.bingo.cartelas[2].bingo == 4512
+    
+def test_quando_jogar_bingo_deve_retornar_o_resultado_do_bingo():
+    submarino = Submarino()
+    caminho = "assets/bingo_test.txt"
+    dados_bingo = submarino.le_arquivo(caminho)
+
+    submarino.bingo.jogar(dados_bingo)
+
+    assert submarino.bingo.resultado == 4512
+
+def test_quando_jogar_bingo_deve_retornar_o_resultado_da_ultima_cartela_dar_bingo():
+    submarino = Submarino()
+    caminho = "assets/bingo_test.txt"
+    dados_bingo = submarino.le_arquivo(caminho)
+
+    submarino.bingo.jogar_2(dados_bingo)
+
+    assert submarino.bingo.resultado_vencedor[-1] == 1924
