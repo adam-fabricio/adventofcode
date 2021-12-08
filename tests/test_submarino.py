@@ -340,3 +340,39 @@ def test_quando_jogar_bingo_deve_retornar_o_resultado_da_ultima_cartela_dar_bing
     submarino.bingo.jogar_2(dados_bingo)
 
     assert submarino.bingo.resultado_vencedor[-1] == 1924
+
+def test_quando_submarino_reveber_lista_de_linhas_de_vento_deve_separar_em_duas_tuplas():
+    submarino = Submarino()
+    caminho = "assets/lista_turbilhoes_teste.txt"
+    lista_turbilhao = submarino.le_arquivo(caminho)
+
+    assert submarino.converte_para_cordenadas(lista_turbilhao[0]) == [(0,9) ,(5,9)]
+
+def test_quando_receber_uma_tupla_deve_marcar_as_linhas_em_um_mapa():
+    submarino = Submarino()
+    caminho = "assets/lista_turbilhoes_teste.txt"
+    lista_turbilhao = submarino.le_arquivo(caminho)
+    
+    cordenadas_0 = submarino.converte_para_cordenadas(lista_turbilhao[0])
+    mapa_turbilhao_0 = submarino.marca_no_mapa(cordenadas_0)
+
+    print(lista_turbilhao[1])
+    cordenadas_1 = submarino.converte_para_cordenadas(lista_turbilhao[1])
+    print(cordenadas_1)
+    mapa_turbilhao_1 = submarino.marca_no_mapa(cordenadas_1)
+    print("oi", mapa_turbilhao_1)
+
+    assert mapa_turbilhao_0 == {"0, 9": 1, "1, 9": 1, "2, 9": 1, "3, 9": 1, "4, 9": 1, "5, 9": 1}
+    assert mapa_turbilhao_1 == {"0, 9": 1, "1, 9": 1, "2, 9": 1, "3, 9": 1, "4, 9": 1, "5, 9": 1}
+    assert True == False
+
+"""
+def test_quando_receber_uma_lista_de_cordenadas_deve_desenhar_no_mapa():
+    submarino = Submarino()
+    caminho = "assets/lista_turbilhoes_teste.txt"
+    lista_turbilhao = submarino.le_arquivo(caminho)
+    
+    cordenada_1 = submarino.converte_para_cordenadas(lista_turbilhao[1])
+    mapa_turbilhao = submarino.marca_no_mapa(cordenada_1)
+
+""" 

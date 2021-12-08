@@ -162,6 +162,30 @@ class Submarino(object):
                 comum_bit += "1"
             novo_consolidado = self.dividir_lista(relatorio, comum_bit)
             return self.calcular_purificador_de_CO2(novo_consolidado, comum_bit)
+        
+    
+    def converte_para_cordenadas(self, cordenadas: str) -> list:
+        esquerda, direita = cordenadas.split(" -> ")
+
+        return [(int(esquerda.split(",")[0]), int(esquerda.split(",")[1])), 
+                (int(direita.split(",")[0]), int(direita.split(",")[1]))]
+
+    def marca_no_mapa(self, cordenadas: list, mapa: dict = {}) -> dict:
+        print(cordenadas[0][0], cordenadas[1][0])
+        print(cordenadas[0][1], cordenadas[1][1])
+        if cordenadas[0][0] == cordenadas[1][0]:
+            if cordenadas[0][0] - cordenadas[0][1] < 0:
+                cordenadas[1], cordenadas[0] = cordenadas[0], cordenadas[1]
+            for i in range(cordenadas[0][0] - cordenadas[0][1]):
+                mapa = {f"{cordenadas[0][0]}, {cordenadas[0][0] + i}": 1}
+        elif cordenadas[0][1] == cordenadas[1][1]:
+            #if cordenadas[0][0] - cordenadas[1][0] < 0:
+            #    cordenadas[1], cordenadas[0] = cordenadas[0], cordenadas[1]
+            
+            for i in range(cordenadas[1][0] - cordenadas[0][0] + 1):
+                mapa[f"{cordenadas[0][0] + i}, {cordenadas[0][1]}"] =  1
+            
+        return mapa
 
 
 class Cartela():
@@ -246,4 +270,5 @@ class Bingo():
                     elif not i in self.cartela_vencedora:
                         self.cartela_vencedora.append(i)
                         self.resultado_vencedor.append(cartela.bingo)
+
 
