@@ -170,14 +170,18 @@ class Submarino(object):
         return [(int(esquerda.split(",")[0]), int(esquerda.split(",")[1])), 
                 (int(direita.split(",")[0]), int(direita.split(",")[1]))]
 
-    def marca_no_mapa(self, cordenadas: list, mapa: dict = {}) -> dict:
-        print(cordenadas[0][0], cordenadas[1][0])
-        print(cordenadas[0][1], cordenadas[1][1])
+    def marca_no_mapa(self, cordenadas: list, mapa: dict = {None}) -> dict:
         if cordenadas[0][0] == cordenadas[1][0]:
-            if cordenadas[0][0] - cordenadas[0][1] < 0:
+            if cordenadas[1][1] - cordenadas[0][0]  < 0:
                 cordenadas[1], cordenadas[0] = cordenadas[0], cordenadas[1]
-            for i in range(cordenadas[0][0] - cordenadas[0][1]):
-                mapa = {f"{cordenadas[0][0]}, {cordenadas[0][0] + i}": 1}
+
+            for i in range(cordenadas[1][1] - cordenadas[0][1] + 1) :
+                print(i)
+                print(f"{cordenadas[0][0]}, {cordenadas[0][1] + i}")
+                mapa[f"{cordenadas[0][0]}, {cordenadas[0][1] + i}"] = 1
+                print(mapa)
+        
+        
         elif cordenadas[0][1] == cordenadas[1][1]:
             #if cordenadas[0][0] - cordenadas[1][0] < 0:
             #    cordenadas[1], cordenadas[0] = cordenadas[0], cordenadas[1]

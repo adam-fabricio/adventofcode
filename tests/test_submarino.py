@@ -356,11 +356,11 @@ def test_quando_receber_uma_tupla_deve_marcar_as_linhas_em_um_mapa():
     cordenadas_0 = submarino.converte_para_cordenadas(lista_turbilhao[0])
     mapa_turbilhao_0 = submarino.marca_no_mapa(cordenadas_0)
 
-    print(lista_turbilhao[1])
-    cordenadas_1 = submarino.converte_para_cordenadas(lista_turbilhao[1])
-    print(cordenadas_1)
-    mapa_turbilhao_1 = submarino.marca_no_mapa(cordenadas_1)
-    print("oi", mapa_turbilhao_1)
+
+    cordenadas_2 = submarino.converte_para_cordenadas(lista_turbilhao[3])
+
+    mapa_turbilhao_1 = submarino.marca_no_mapa(cordenadas_2)
+
 
     assert mapa_turbilhao_0 == {"0, 9": 1, "1, 9": 1, "2, 9": 1, "3, 9": 1, "4, 9": 1, "5, 9": 1}
     assert mapa_turbilhao_1 == {"0, 9": 1, "1, 9": 1, "2, 9": 1, "3, 9": 1, "4, 9": 1, "5, 9": 1}
