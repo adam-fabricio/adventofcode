@@ -2,6 +2,8 @@ from src.submarino import (Submarino,
                            Cartela)
 import pytest
 
+from unittest import skip
+
 def test_quando_ler_arquivo_retornar_uma_lista_de_movimento():
     submarino = Submarino()
     arquivo = "assets/day2_test.txt"
@@ -347,32 +349,167 @@ def test_quando_submarino_reveber_lista_de_linhas_de_vento_deve_separar_em_duas_
     lista_turbilhao = submarino.le_arquivo(caminho)
 
     assert submarino.converte_para_cordenadas(lista_turbilhao[0]) == [(0,9) ,(5,9)]
-
-def test_quando_receber_uma_tupla_deve_marcar_as_linhas_em_um_mapa():
+    
+def test_quando_receber_linhas_repetidas_somar_um_no_valor():
     submarino = Submarino()
     caminho = "assets/lista_turbilhoes_teste.txt"
     lista_turbilhao = submarino.le_arquivo(caminho)
-    
-    cordenadas_0 = submarino.converte_para_cordenadas(lista_turbilhao[0])
-    mapa_turbilhao_0 = submarino.marca_no_mapa(cordenadas_0)
 
 
-    cordenadas_2 = submarino.converte_para_cordenadas(lista_turbilhao[3])
+    cordenadas_0 = submarino.converte_para_cordenadas(lista_turbilhao[4])
 
-    mapa_turbilhao_1 = submarino.marca_no_mapa(cordenadas_2)
+    cordenadas_1 = submarino.converte_para_cordenadas(lista_turbilhao[2])
+
+    mapa = submarino.marca_no_mapa(cordenadas_0)
+    mapa = submarino.marca_no_mapa(cordenadas_1)
+
+    assert mapa == {"7, 1": 1, "7, 2": 1, "7, 3": 1, "7, 4": 2, "7, 0": 1, "3, 4": 1, "4, 4": 1, "5, 4": 1, "6, 4": 1, "8, 4": 1, "9, 4": 1}
 
 
-    assert mapa_turbilhao_0 == {"0, 9": 1, "1, 9": 1, "2, 9": 1, "3, 9": 1, "4, 9": 1, "5, 9": 1}
-    assert mapa_turbilhao_1 == {"0, 9": 1, "1, 9": 1, "2, 9": 1, "3, 9": 1, "4, 9": 1, "5, 9": 1}
-    assert True == False
+def test_quando_receber_as_cordenadas_deve_gerar_um_mapa():
 
-"""
-def test_quando_receber_uma_lista_de_cordenadas_deve_desenhar_no_mapa():
     submarino = Submarino()
     caminho = "assets/lista_turbilhoes_teste.txt"
     lista_turbilhao = submarino.le_arquivo(caminho)
-    
-    cordenada_1 = submarino.converte_para_cordenadas(lista_turbilhao[1])
-    mapa_turbilhao = submarino.marca_no_mapa(cordenada_1)
+    mapa = {}
+    i = 1
+    for turbilhao in lista_turbilhao:
+        cordenadas = submarino.converte_para_cordenadas(turbilhao)
+        mapa = submarino.marca_no_mapa(cordenadas, mapa)
 
-""" 
+    
+    assert mapa == {
+                    "0, 0": 1,
+                    "2, 0": 1,
+                    "7, 0": 1,
+                    "8, 0": 1,
+                    "1, 1": 1,
+                    "2, 1": 1,
+                    "3, 1": 1,
+                    "7, 1": 2,
+                    "2, 2": 2,
+                    "4, 2": 1,
+                    "6, 2": 1,
+                    "7, 2": 1,
+                    "8, 2": 1,
+                    "3, 3": 1,
+                    "5, 3": 2,
+                    "7, 3": 2,
+                    "1, 4": 1,
+                    "2, 4": 1,
+                    "3, 4": 2,
+                    "4, 4": 3,
+                    "5, 4": 1,
+                    "6, 4": 3,
+                    "7, 4": 2,
+                    "8, 4": 1,
+                    "9, 4": 1,
+                    "3, 5": 1,
+                    "5, 5": 2,
+                    "2, 6": 1,
+                    "6, 6": 1,
+                    "1, 7": 1,
+                    "7, 7": 1,
+                    "0, 8": 1,
+                    "8, 8": 1,
+                    "0, 9": 2,
+                    "1, 9": 2,
+                    "2, 9": 2,
+                    "3, 9": 1,
+                    "4, 9": 1,
+                    "5, 9": 1,
+                   }
+
+def test_quando_passar_mapa_deve_retornar_soma_dos_pontos_criticos():
+
+    submarino = Submarino()
+    caminho = "assets/lista_turbilhoes_teste.txt"
+    lista_turbilhao = submarino.le_arquivo(caminho)
+    mapa = {}
+    for turbilhao in lista_turbilhao:
+        cordenadas = submarino.converte_para_cordenadas(turbilhao)
+        mapa = submarino.marca_no_mapa(cordenadas, mapa)
+    
+    assert len(submarino.pontos_criticos(mapa)) == 12
+
+def test_quando_passar_cordenadas_verificar_se_a_linha_e_diagonal():
+    submarino = Submarino()
+    caminho = "assets/lista_turbilhoes_teste.txt"
+    lista_turbilhao = submarino.le_arquivo(caminho)
+
+
+    cordenadas_0 = submarino.converte_para_cordenadas(lista_turbilhao[1])
+    cordenadas_1 = submarino.converte_para_cordenadas(lista_turbilhao[5])
+
+    mapa = submarino.marca_no_mapa(cordenadas_0, {})
+    mapa = submarino.marca_no_mapa(cordenadas_1, mapa)
+
+    assert mapa == {
+                    "0, 8": 1,
+                    "1, 7": 1,
+                    "2, 6": 1,
+                    "3, 5": 1,
+                    "4, 4": 1,
+                    "5, 3": 2,
+                    "6, 2": 1,
+                    "7, 1": 1,
+                    "8, 0": 1,
+                    "2, 0": 1,
+                    "3, 1": 1,
+                    "4, 2": 1,
+                    "6, 4": 1
+                    }
+
+
+
+def test_quando_passar_1_dia_deve_o_diminuir_o_contador_do_ciclo_de_vida_do_lanterfish():
+    submarino = Submarino()
+    caminho = "assets/idade_lanternfish_test.txt"
+    lista_idades = submarino.le_arquivo(caminho)
+
+    lista_idades = submarino.proximo_dia_lanterfish(lista_idades[0].split(','))
+
+    assert lista_idades == [2,3,2,0,1]
+
+def test_quando_o_algum_valor_da_lista_chegar_em_zero_deve_retornar_para_6_e_acrescentar_8_no_final_da_lista():
+    submarino = Submarino()
+    caminho = "assets/idade_lanternfish_test.txt"
+    lista_idades = submarino.le_arquivo(caminho)
+
+    lista_idades = submarino.proximo_dia_lanterfish(lista_idades[0].split(','))
+    lista_idades = submarino.proximo_dia_lanterfish(lista_idades)
+    
+    assert lista_idades == [1,2,1,6,0,8]
+
+def test_quando_se_passar_18_dias_deve_retornar_a_seguinte_lista():
+    submarino = Submarino()
+    caminho = "assets/idade_lanternfish_test.txt"
+    lista_idades = submarino.le_arquivo(caminho)[0].split(',')
+    print(f"Estado inicial: {lista_idades}")
+    
+    for dia in range(18):
+        lista_idades = submarino.proximo_dia_lanterfish(lista_idades)
+        print(f"Após {dia} dias: {lista_idades}")
+    
+    assert lista_idades == [6,0,6,4,5,6,0,1,1,2,6,0,1,1,1,2,2,3,3,4,6,7,8,8,8,8]
+    assert len(lista_idades) == 26
+
+def test_quando_se_passar_80_dias_deve_retornar_5934():
+    submarino = Submarino()
+    caminho = "assets/idade_lanternfish_test.txt"
+    lista_idades = submarino.le_arquivo(caminho)[0].split(',')
+    
+    for dia in range(80):
+        lista_idades = submarino.proximo_dia_lanterfish(lista_idades)
+
+    assert len(lista_idades) == 5934
+
+def test_quando_se_passar_256_dias_deve_retornar_26984457539():
+    submarino = Submarino()
+    caminho = "assets/idade_lanternfish_test.txt"
+    lista_idades = submarino.le_arquivo(caminho)[0].split(',')
+    
+    for dia in range(256):
+        lista_idades = submarino.proximo_dia_lanterfish(lista_idades)
+
+    assert len(lista_idades) == 26984457539

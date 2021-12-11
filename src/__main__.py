@@ -92,3 +92,52 @@ if __name__ == "__main__":
     
     submarino.bingo.jogar_2(dados_bingo)
     print(f"Resultado do bingo é {submarino.bingo.resultado_vencedor[-1]}")
+
+    estrela3 = 13
+    print()
+    print("*" * estrela2)
+    print("*" * estrela3, "Dia 5.", "*" * estrela3)
+    print("*" * estrela2)
+    print()
+
+    lista_turbilhao = submarino.le_arquivo("assets/lista_turbilhao.txt")
+    mapa = {}
+    for turbilhao in lista_turbilhao:
+        cordenadas = submarino.converte_para_cordenadas(turbilhao)
+        mapa = submarino.marca_no_mapa(cordenadas, mapa)
+
+    soma_de_pontos_criticos = len(submarino.pontos_criticos(mapa))
+
+    print(f"A soma dos valores criticos é {soma_de_pontos_criticos}")
+
+    
+    estrela3 = 13
+    print()
+    print("*" * estrela2)
+    print("*" * estrela1, "Dia 6 - Parte 1.", "*" * estrela1)
+    print("*" * estrela2)
+    print()
+
+    caminho = "assets/idade_lanternfish.txt"
+    lista_idades = submarino.le_arquivo(caminho)[0].split(',')
+
+    for dia in range(80):
+        lista_idades = submarino.proximo_dia_lanterfish(lista_idades)
+
+    print(f"Após 80 dias terão {len(lista_idades)} lanternfish.") 
+
+    
+    estrela3 = 13
+    print()
+    print("*" * estrela2)
+    print("*" * estrela1, "Dia 6 - Parte 2.", "*" * estrela1)
+    print("*" * estrela2)
+    print()
+
+    lista_idades = submarino.le_arquivo(caminho)[0].split(',')
+
+    for dia in range(256):
+        lista_idades = submarino.proximo_dia_lanterfish(lista_idades)
+        print(dia)
+
+    print(f"Após 256 dias terão {len(lista_idades)} lanternfish.") 
