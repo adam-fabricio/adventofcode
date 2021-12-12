@@ -12,7 +12,6 @@ def test_quando_ler_arquivo_retornar_uma_lista_de_movimento():
 
     assert lista == ["forward 5", "down 5", "forward 8", "up 3", "down 8", "forward 2"]
 
-
 def test_quando_chamar_forward_incrementar_posicao_x():
     submarino = Submarino()
     
@@ -28,8 +27,6 @@ def test_quando_chamar_forward_mais_de_uma_vez_incrementar_posicao_x():
 
     assert submarino.posicao_x == 12
 
-
-
 def test_quando_chamar_down_incrementar_mira():
     submarino = Submarino()
     
@@ -44,7 +41,6 @@ def test_quando_chamar_down_mais_de_uma_vez_incrementar_mira():
     forward = submarino.down("7")
 
     assert submarino.posicao_aim == 12
-
 
 def test_quando_chamar_up_decrementar_mira():
     submarino = Submarino()
@@ -79,7 +75,6 @@ def test_quando_passar_uma_lista_de_movimento_deve_retornar_o_resultado_da_posic
 
     assert (submarino.posicao_x, submarino.posicao_y) == (15, 60)
 
-
 dados = [199, 200, 208, 210, 200, 207, 240, 269, 260, 263]
 relatorio = ["N/A", "aumentou", "aumentou", "aumentou", "diminuiu", "aumentou", "aumentou", "aumentou","diminuiu", "aumentou"]
 
@@ -87,7 +82,6 @@ def test_quando_gerar_relatorio_primeiro_item_e_NA():
     submarino = Submarino()
     
     assert submarino.sonar(dados)[0] == relatorio[0]
-
 
 def test_quando_gerar_relatorio_deve_retornar_uma_lista_informando_se_o_valor_e_maior_que_o_anterior():
     submarino = Submarino()
@@ -106,7 +100,7 @@ def test_quando_passar_um_arquivo_transformar_em_lista():
     
     assert lista == list(map(str, dados))
 
-def test_somar_tres_proximos_valores_da_lista():
+def test_quando_receber_uma_lista_devesomar_tres_proximos_valores_da_lista():
     valor_inicial = "assets/input_test.txt"
     resultado = "assets/dados_3_medidas.txt"
     submarino = Submarino()
@@ -115,8 +109,7 @@ def test_somar_tres_proximos_valores_da_lista():
     
     assert list(map(str,submarino.sonar_filtro(lista_inicial))) == lista_resultado
 
-
-def test_gerar_relatorio_do_test_filtrado_pela_soma_dos_tres_valores():
+def test_quando_receber_lista_de_itens_deve_gerar_relatorio_do_test_filtrado_pela_soma_dos_tres_valores():
     valor_inicial = "assets/input_test.txt"
     resultado = "assets/dados_3_medidas.txt"
     submarino = Submarino()
@@ -125,7 +118,7 @@ def test_gerar_relatorio_do_test_filtrado_pela_soma_dos_tres_valores():
     
     assert  submarino.sonar(lista_resultado) == ["N/A", "aumentou", "nao mudou", "diminuiu", "aumentou", "aumentou", "aumentou", "aumentou"]
 
-def test_ao_receber_um_conjunto_de_bit_deve_segregar_os_bits():
+def test_quando_receber_um_conjunto_de_bit_deve_segregar_os_bits():
     submarino = Submarino()
     entrada = "10100"
     saida = [1, 0, 1, 0, 0]
@@ -168,7 +161,6 @@ def test_quando_receber_o_consolidado_calcular_o_gerador_de_oxigenio():
     
     assert gerador_oxigenio == 23
 
-
 def test_quando_receber_uma_string_deve_dividir_a_lista():
     entrada_string = "1"
     resultado = ["11110", "10110", "10111", "10101", "11100", "10000", "11001"]
@@ -198,7 +190,6 @@ def test_quando_receber_o_relatorio_calcular_o_purificador_de_CO2():
     
     assert purificador_CO2 == 10
 
-
 def test_quando_passar_dados_deve_gerar_lista_de_numeros_sorteados():
     submarino = Submarino()
     caminho = "assets/bingo_test.txt"
@@ -209,7 +200,7 @@ def test_quando_passar_dados_deve_gerar_lista_de_numeros_sorteados():
     for i in range(len(numeros_sorteados)):
         assert int(numeros_sorteados[i]) == resultado_test[i]
 
-def test_adicionar_linha_na_cartela_deve_adicionar_linha_a_cartela():
+def test_quando_adicionar_linha_na_cartela_deve_adicionar_linha_a_cartela():
     cartela = Cartela()
     dados_teste = '22 13 17 11  0'
     dados_teste2 = ' 8  2 23  4 24'
@@ -222,7 +213,7 @@ def test_adicionar_linha_na_cartela_deve_adicionar_linha_a_cartela():
 
     assert cartela.cartela == [[22, 13, 17, 11, 0], [8,  2, 23,  4, 24]]
 
-def test_ao_passar_os_dados_deve_cirar_as_cartelas():
+def test_quando_passar_os_dados_deve_cirar_as_cartelas():
     submarino = Submarino()
     caminho = "assets/bingo_test.txt"
     dados_bingo = submarino.le_arquivo(caminho)
@@ -236,7 +227,6 @@ def test_ao_passar_os_dados_deve_cirar_as_cartelas():
     for i in range(len(submarino.bingo.cartelas)):
         assert submarino.bingo.cartelas[i].cartela == cartela[i]
 
-
 def test_quando_enviar_numero_sorteado_deve_substituir_o_valor_por_menos_um_caso_exista():
     submarino = Submarino()
     caminho = "assets/bingo_test.txt"
@@ -248,7 +238,6 @@ def test_quando_enviar_numero_sorteado_deve_substituir_o_valor_por_menos_um_caso
     submarino.bingo.cartelas[2].marcar_numero(17)
 
     assert submarino.bingo.cartelas[2].cartela == cartela[0]
-
 
 def test_quando_marcar_numero_inexistente_deve_marcar_vazio():
     submarino = Submarino()
@@ -270,7 +259,6 @@ def test_quando_marcar_numero_existente_deve_salvar_posicao_tupla_linha_e_coluna
     
     assert submarino.bingo.cartelas[0].ultima_posicao == (1, 3)
 
-
 def test_quando_marcar_todos_numeros_de_uma_linha_deve_retornar_bingo():
     submarino = Submarino()
     caminho = "assets/bingo_test.txt"
@@ -284,7 +272,6 @@ def test_quando_marcar_todos_numeros_de_uma_linha_deve_retornar_bingo():
             resultado = "BINGO"
         
     assert resultado == "BINGO"
-
 
 def test_quando_marcar_todos_numeros_de_uma_coluna_deve_retornar_bingo():
     submarino = Submarino()
@@ -312,7 +299,6 @@ def test_quando_passar_chamar_funcao_deve_retornar_a_soma_dos_numeros_nao_marcad
 
     assert submarino.bingo.cartelas[0].somar_cartela() == 298
 
-    
 def test_quando_marcar_numero_e_der_bingo_deve_retornar_soma_dos_valores_nao_marcados_vezes_ultimo_valor():
     submarino = Submarino()
     caminho = "assets/bingo_test.txt"
@@ -364,7 +350,6 @@ def test_quando_receber_linhas_repetidas_somar_um_no_valor():
     mapa = submarino.marca_no_mapa(cordenadas_1)
 
     assert mapa == {"7, 1": 1, "7, 2": 1, "7, 3": 1, "7, 4": 2, "7, 0": 1, "3, 4": 1, "4, 4": 1, "5, 4": 1, "6, 4": 1, "8, 4": 1, "9, 4": 1}
-
 
 def test_quando_receber_as_cordenadas_deve_gerar_um_mapa():
 
@@ -460,8 +445,6 @@ def test_quando_passar_cordenadas_verificar_se_a_linha_e_diagonal():
                     "6, 4": 1
                     }
 
-
-
 def test_quando_passar_1_dia_deve_o_diminuir_o_contador_do_ciclo_de_vida_do_lanterfish():
     submarino = Submarino()
     caminho = "assets/idade_lanternfish_test.txt"
@@ -533,6 +516,7 @@ def test_quando_passar_lista_de_idade_converter_deve_converter_em_um_dicionario(
                         "ciclo_1": 1,
                         "ciclo_0": 0
                     }
+
 def test_quando_passar_um_dia_deve_rotacionar_os_valores():
     submarino = Submarino()
     caminho = "assets/idade_lanternfish_test.txt"
@@ -610,8 +594,72 @@ def test_quando_passar_256_dias_deve_retornar_o_numero_de_peixes():
 
     assert sum(ciclos.values()) == 26984457539
 
-def test_quando_passar_uma_lista_de_posicao_scabs_deve_calcular_a_mediana():
+def test_quando_passar_uma_lista_de_posicao_caranguejos_deve_calcular_a_mediana():
     submarino = Submarino()
-    caminho = "assets/idade_lanternfish_test.txt"
-    lista_scrabs = submarino.le_arquivo(caminho)[0].split(',')
+    caminho = "assets/lista_caranguejos_teste.txt"
+    lista_caranguejos = submarino.le_arquivo(caminho)[0]
+    lista_caranguejos_int = submarino.transforma_lista_de_str_em_int(lista_caranguejos)
+
+    mediana = submarino.mediana_lista_caranguejos(lista_caranguejos_int)
+
+    assert mediana == 2
+
+def test_quando_passar_uma_posicao_deve_calcular_o_valor_do_combustivel():
+    submarino = Submarino()
+    caminho = "assets/lista_caranguejos_teste.txt"
+    lista_caranguejos = submarino.le_arquivo(caminho)[0]
+    lista_caranguejos_int = submarino.transforma_lista_de_str_em_int(lista_caranguejos)
+    mediana = submarino.mediana_lista_caranguejos(lista_caranguejos_int)
+
+    combustivel = submarino.calculo_combustivel(lista_caranguejos_int, mediana)
+
+    assert combustivel == 37
+
+def test_quando_passar_posicao_inicial_e_posicao_final_calcular_o_valor_combustivel():
+    submarino = Submarino()
+    posicao_inicial = 1
+    posicao_final = 5
+
+    combustivel = submarino.calculo_combustivel_real(posicao_inicial, posicao_final)
+
+    assert combustivel == 10
+
+def test_quando_receber_uma_lista_deve_calcular_a_media():
+    submarino = Submarino()
+    caminho = "assets/lista_caranguejos_teste.txt"
+    lista_caranguejos = submarino.le_arquivo(caminho)[0]
+    lista_caranguejos_int = submarino.transforma_lista_de_str_em_int(lista_caranguejos)
+    
+    media = sum(lista_caranguejos_int)/len(lista_caranguejos_int)
+
+    assert int(round(media,0)) == 5
+
+    combustivel = 0 
+    for posicao in lista_caranguejos_int:
+        combustivel += submarino.calculo_combustivel_real(posicao,int(round(media,0)))
+
+    assert combustivel == 168
+
+def test_quando_receber_uma_lista_ordenada_dividir_em_duas_listas():
+
+    submarino = Submarino()
+    caminho = "assets/lista_caranguejos_teste.txt"
+    lista_caranguejos_str = submarino.le_arquivo(caminho)[0]
+    lista_caranguejos = submarino.transforma_lista_de_str_em_int(lista_caranguejos_str)
+    lista_caranguejos.sort()
+
+    lista_caranguejos_divida = submarino.dividir_lista_metade(lista_caranguejos)
+
+    assert lista_caranguejos_divida == [[0, 1, 1, 2, 2], [4, 7, 14, 16]]
+
+def test_quando_passar_lista_e_media_calcular_o_minimo_combustivel():
+    submarino = Submarino()
+    caminho = "assets/lista_caranguejos_teste.txt"
+    lista_caranguejos = submarino.le_arquivo(caminho)[0]
+    lista_caranguejos_int = submarino.transforma_lista_de_str_em_int(lista_caranguejos)
+    media = int(round(sum(lista_caranguejos_int)/len(lista_caranguejos_int),0))
+
+    combustivel = submarino.calculo_minimo_combustivel_real(lista_caranguejos_int, media)
+    assert combustivel == 168
+
 

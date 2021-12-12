@@ -142,3 +142,29 @@ if __name__ == "__main__":
     
     print(f"Após 80 dias terão {sum(ciclos.values())} lanternfish.")
 
+    estrela3 = 13
+    print()
+    print("*" * estrela2)
+    print("*" * estrela1, "Dia 7 - Parte 1.", "*" * estrela1)
+    print("*" * estrela2)
+    print()
+
+    caminho = "assets/lista_caranguejos.txt"
+    lista_caranguejos_str = submarino.le_arquivo(caminho)[0]
+    lista_caranguejos = submarino.transforma_lista_de_str_em_int(lista_caranguejos_str)
+    mediana = submarino.mediana_lista_caranguejos(lista_caranguejos)
+    combustivel = submarino.calculo_combustivel(lista_caranguejos, mediana)
+
+
+    print(f"O minimo de combustivel gasto para linhar a posição é: {combustivel}")
+
+    estrela3 = 13
+    print()
+    print("*" * estrela2)
+    print("*" * estrela1, "Dia 7 - Parte 2.", "*" * estrela1)
+    print("*" * estrela2)
+    print()
+
+    media = int(round(sum(lista_caranguejos) / len(lista_caranguejos),0))
+    combustivel = submarino.calculo_minimo_combustivel_real(lista_caranguejos, media)
+    print(f"O valor minimo de combustivel gasto será: {combustivel}")

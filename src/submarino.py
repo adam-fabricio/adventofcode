@@ -54,7 +54,6 @@ class Bingo():
                         self.resultado_vencedor.append(cartela.bingo)
 
 
-
 class Cartela():
 
     def __init__(self):
@@ -86,6 +85,7 @@ class Cartela():
     def somar_cartela(self) -> int:
         return sum([num for row in self.cartela for num in row if num > -1])
 
+
 class Submarino(object):
     """A classe submarino, implementa as funções comuns entre outras."""
     def __init__(self):
@@ -95,7 +95,6 @@ class Submarino(object):
         self.posicao_y = 0
         self.posicao_aim = 0
         self.bingo = Bingo()
-
 
     def le_arquivo(self, caminho: str) -> list:
         """Le os arquivo de entrada e retorna uma lista."""
@@ -122,7 +121,6 @@ class Submarino(object):
                     result.append("nao mudou")
         return result
 
-
     def sonar_filtro(self, relatorio: list) -> list:
         """Faz um filtro no valor do relatório, gerando um compilado que é a 
         soma dos 3 ultimos valores."""
@@ -137,7 +135,6 @@ class Submarino(object):
 
         return relatorio.count(ocorrencia)
 
-
     def forward(self, valor: str) -> None:
         self.posicao_x += int(valor)
         self.posicao_y += int(valor) * self.posicao_aim        
@@ -145,7 +142,6 @@ class Submarino(object):
     def down(self, valor: str) -> None:
         self.posicao_aim += int(valor)
         
-
     def up(self, valor: str) -> None:
         self.posicao_aim -= int(valor)
 
@@ -163,7 +159,6 @@ class Submarino(object):
         """Individualiza os bits da cadeia e forma um dicionario"""
 
         return list(map(int, list(bits)))
-
 
     def consolidar_relatorio(self, relatorio: list) -> dict:
         """Consolida os valores dos bits."""
@@ -190,7 +185,6 @@ class Submarino(object):
                 lista_bit[bits] = 0
         
         return lista_bit
-
 
     def calcula_gamma(self, consolidado: dict) -> int:
         gamma = 0
@@ -228,8 +222,6 @@ class Submarino(object):
             novo_consolidado = self.dividir_lista(relatorio, comum_bit)
             return self.calcular_gerador_oxigenio(novo_consolidado, comum_bit)
 
-
-
     def calcular_purificador_de_CO2(self, relatorio:list, comum_bit: str = "") -> int:
 
         if len(relatorio) == 1:
@@ -245,7 +237,6 @@ class Submarino(object):
             novo_consolidado = self.dividir_lista(relatorio, comum_bit)
             return self.calcular_purificador_de_CO2(novo_consolidado, comum_bit)
         
-    
     def converte_para_cordenadas(self, cordenadas: str) -> list:
         esquerda, direita = cordenadas.split(" -> ")
 
@@ -286,7 +277,6 @@ class Submarino(object):
                 except:
                     mapa[f"{cordenadas[0][0] + i}, {cordenadas[0][1] + i}"] = 1
         return mapa
-
 
     def pontos_criticos(self, mapa: dict) -> list:
         pontos_criticos = []
@@ -334,3 +324,46 @@ class Submarino(object):
             dicionario["ciclo_2"], dicionario["ciclo_1"], 
         )
         return dicionario
+
+    def mediana_lista_caranguejos(self, lista_de_caranguejos: list) -> int:
+        lista_de_caranguejos.sort()
+        index = len(lista_de_caranguejos)/2
+        return lista_de_caranguejos[int(index)]
+
+    def transforma_lista_de_str_em_int(self, lista_str: list) -> list:
+        return (list(map(int, list(lista_str.split(",")))))
+
+    def calculo_combustivel(self, lista_posicao: list, posicao_final:int) -> int:
+        combustivel = 0
+        for posicao in lista_posicao:
+            combustivel += ((posicao - posicao_final)**2)**(0.5)
+        return combustivel
+
+    def calculo_combustivel_real(self, posicao_inicial:int , posical_final:int) -> int:
+        combustivel = 0
+        for i in range(int(((posical_final - posicao_inicial)**2)**0.5)):
+            combustivel += (((posical_final - posicao_inicial)**2)**0.5) - i
+        return combustivel
+
+    def calculo_lista_combustivel_real(self, lista_posicao:list, posicao_final: int) -> int:
+        combustivel = 0
+        for posicao in lista_posicao:
+            combustivel += self.calculo_combustivel_real(posicao, posicao_final)
+        return combustivel
+
+    def dividir_lista_metade(self, lista:list) -> list:
+        metade = int(round(len(lista)/2))
+        return [lista[:metade], lista[metade + 1:]]
+    
+    def calculo_minimo_combustivel_real(self, lista_posicao: list, media: int):
+        combustivel = self.calculo_lista_combustivel_real(lista_posicao, media)
+        combustivel_mais = self.calculo_lista_combustivel_real(lista_posicao, media + 1)
+        combustivel_menos = self.calculo_lista_combustivel_real(lista_posicao, media - 1)
+        if combustivel <= combustivel_mais and combustivel <= combustivel_menos:
+            return combustivel
+        elif combustivel > combustivel_mais:
+            media += 1
+            return self.calculo_minimo_combustivel_real(lista_posicao, media)
+        else:
+            media -= 1
+            return self.calculo_minimo_combustivel_real(lista_posicao, media)
