@@ -135,9 +135,10 @@ if __name__ == "__main__":
     print()
 
     lista_idades = submarino.le_arquivo(caminho)[0].split(',')
+    ciclos = submarino.dicionario_de_ciclo(lista_idades)
 
     for dia in range(256):
-        lista_idades = submarino.proximo_dia_lanterfish(lista_idades)
-        print(dia)
+        ciclos = submarino.proximo_dia_dicionario(ciclos)
+    
+    print(f"Após 80 dias terão {sum(ciclos.values())} lanternfish.")
 
-    print(f"Após 256 dias terão {len(lista_idades)} lanternfish.") 

@@ -504,6 +504,7 @@ def test_quando_se_passar_80_dias_deve_retornar_5934():
 
     assert len(lista_idades) == 5934
 
+@skip("Muito Demorado")
 def test_quando_se_passar_256_dias_deve_retornar_26984457539():
     submarino = Submarino()
     caminho = "assets/idade_lanternfish_test.txt"
@@ -513,3 +514,104 @@ def test_quando_se_passar_256_dias_deve_retornar_26984457539():
         lista_idades = submarino.proximo_dia_lanterfish(lista_idades)
 
     assert len(lista_idades) == 26984457539
+
+def test_quando_passar_lista_de_idade_converter_deve_converter_em_um_dicionario():
+    submarino = Submarino()
+    caminho = "assets/idade_lanternfish_test.txt"
+    lista_idades = submarino.le_arquivo(caminho)[0].split(',')
+
+    ciclos = submarino.dicionario_de_ciclo(lista_idades)
+
+    assert ciclos == {
+                        "ciclo_8": 0,
+                        "ciclo_7": 0,
+                        "ciclo_6": 0,
+                        "ciclo_5": 0,
+                        "ciclo_4": 1,
+                        "ciclo_3": 2,
+                        "ciclo_2": 1,
+                        "ciclo_1": 1,
+                        "ciclo_0": 0
+                    }
+def test_quando_passar_um_dia_deve_rotacionar_os_valores():
+    submarino = Submarino()
+    caminho = "assets/idade_lanternfish_test.txt"
+    lista_idades = submarino.le_arquivo(caminho)[0].split(',')
+    ciclos = submarino.dicionario_de_ciclo(lista_idades)
+
+    ciclos = submarino.proximo_dia_dicionario(ciclos)
+
+    assert ciclos == {
+                    "ciclo_8": 0,
+                    "ciclo_7": 0,
+                    "ciclo_6": 0,
+                    "ciclo_5": 0,
+                    "ciclo_4": 0,
+                    "ciclo_3": 1,
+                    "ciclo_2": 2,
+                    "ciclo_1": 1,
+                    "ciclo_0": 1
+                }
+    
+def test_quando_passar_um_18_deve_rotacionar_os_valores():
+    submarino = Submarino()
+    caminho = "assets/idade_lanternfish_test.txt"
+    lista_idades = submarino.le_arquivo(caminho)[0].split(',')
+    ciclos = submarino.dicionario_de_ciclo(lista_idades)
+
+    for dia in range(18):
+        ciclos = submarino.proximo_dia_dicionario(ciclos)
+
+    assert ciclos == {
+                    "ciclo_8": 4,
+                    "ciclo_7": 1,
+                    "ciclo_6": 5,
+                    "ciclo_5": 1,
+                    "ciclo_4": 2,
+                    "ciclo_3": 2,
+                    "ciclo_2": 3,
+                    "ciclo_1": 5,
+                    "ciclo_0": 3
+                }
+
+def test_quando_passar_18_dias_deve_retornar_o_numero_de_peixes():
+
+    submarino = Submarino()
+    caminho = "assets/idade_lanternfish_test.txt"
+    lista_idades = submarino.le_arquivo(caminho)[0].split(',')
+    ciclos = submarino.dicionario_de_ciclo(lista_idades)
+
+    for dia in range(18):
+        ciclos = submarino.proximo_dia_dicionario(ciclos)
+
+    assert sum(ciclos.values()) == 26
+
+def test_quando_passar_80_dias_deve_retornar_o_numero_de_peixes():
+
+    submarino = Submarino()
+    caminho = "assets/idade_lanternfish_test.txt"
+    lista_idades = submarino.le_arquivo(caminho)[0].split(',')
+    ciclos = submarino.dicionario_de_ciclo(lista_idades)
+
+    for dia in range(80):
+        ciclos = submarino.proximo_dia_dicionario(ciclos)
+
+    assert sum(ciclos.values()) == 5934
+
+def test_quando_passar_256_dias_deve_retornar_o_numero_de_peixes():
+
+    submarino = Submarino()
+    caminho = "assets/idade_lanternfish_test.txt"
+    lista_idades = submarino.le_arquivo(caminho)[0].split(',')
+    ciclos = submarino.dicionario_de_ciclo(lista_idades)
+
+    for dia in range(256):
+        ciclos = submarino.proximo_dia_dicionario(ciclos)
+
+    assert sum(ciclos.values()) == 26984457539
+
+def test_quando_passar_uma_lista_de_posicao_scabs_deve_calcular_a_mediana():
+    submarino = Submarino()
+    caminho = "assets/idade_lanternfish_test.txt"
+    lista_scrabs = submarino.le_arquivo(caminho)[0].split(',')
+

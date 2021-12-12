@@ -304,3 +304,33 @@ class Submarino(object):
             else:
                 lista_de_idade[i] -= 1
         return lista_de_idade
+    
+    def dicionario_de_ciclo(self, lista_de_idade: list) -> dict:
+        dicionario = {}
+        dicionario["ciclo_8"] = lista_de_idade.count("8")
+        dicionario["ciclo_7"] = lista_de_idade.count("7")
+        dicionario["ciclo_6"] = lista_de_idade.count("6")
+        dicionario["ciclo_5"] = lista_de_idade.count("5")
+        dicionario["ciclo_4"] = lista_de_idade.count("4")
+        dicionario["ciclo_3"] = lista_de_idade.count("3")
+        dicionario["ciclo_2"] = lista_de_idade.count("2")
+        dicionario["ciclo_1"] = lista_de_idade.count("1")
+        dicionario["ciclo_0"] = lista_de_idade.count("0")
+        return dicionario
+        
+    def proximo_dia_dicionario(self, dicionario: dict) -> dict:
+        buffer = dicionario["ciclo_8"]
+        (
+            dicionario["ciclo_8"], dicionario["ciclo_7"], 
+            dicionario["ciclo_6"], dicionario["ciclo_5"], 
+            dicionario["ciclo_4"], dicionario["ciclo_3"], 
+            dicionario["ciclo_2"], dicionario["ciclo_1"], 
+            dicionario["ciclo_0"]
+        ) = (
+            dicionario["ciclo_0"], dicionario["ciclo_8"], 
+            dicionario["ciclo_7"] + dicionario["ciclo_0"], 
+            dicionario["ciclo_6"], dicionario["ciclo_5"], 
+            dicionario["ciclo_4"], dicionario["ciclo_3"], 
+            dicionario["ciclo_2"], dicionario["ciclo_1"], 
+        )
+        return dicionario
