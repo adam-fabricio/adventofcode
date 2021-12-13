@@ -367,3 +367,97 @@ class Submarino(object):
         else:
             media -= 1
             return self.calculo_minimo_combustivel_real(lista_posicao, media)
+
+    def converter_lista_de_sinais(self, sinal: str) -> dict:
+        dicionario = {}
+        lista_sinal = sinal.split(" | ")
+        dicionario["input"] = lista_sinal[0].split(" ")
+        dicionario["output"] = lista_sinal[1].split(" ")
+        return dicionario
+    
+    def contar_saida_1_4_7_8(self, sinal: dict) -> int:
+        resultado = 0
+        for segmento in sinal["output"]:
+            if len(segmento) in [2, 3, 4 , 7]:
+                resultado += 1
+        return resultado
+
+    def decodifica_sete_segmentos(self, lista_input: list) -> dict:
+        decodificador = {}
+        lista_decodificador = [["z"]]*10
+        i = 0
+        while len(decodificador) < 10:
+            for sinal in lista_input:
+                if len(sinal) == 2:
+                    lista_sinal = list(sinal)
+                    lista_sinal.sort()
+                    decodificador["".join(lista_sinal)] = 1
+                    lista_decodificador[1] = lista_sinal
+                    lista_input.remove(sinal)
+                elif len(sinal) == 3:
+                    lista_sinal = list(sinal)
+                    lista_sinal.sort()
+                    decodificador["".join(lista_sinal)] = 7
+                    lista_decodificador[7] = lista_sinal
+                    lista_input.remove(sinal)
+                elif len(sinal) == 4:
+                    lista_sinal = list(sinal)
+                    lista_sinal.sort()
+                    lista_decodificador[4] = lista_sinal
+                    decodificador["".join(lista_sinal)] = 4
+                    lista_input.remove(sinal)
+                elif len(sinal) == 7:
+                    lista_sinal = list(sinal)
+                    lista_sinal.sort()
+                    decodificador["".join(lista_sinal)] = 8
+                    lista_decodificador[8] = lista_sinal
+                    lista_input.remove(sinal)
+                elif len(sinal) == 5:
+                    lista_sinal = list(sinal)
+                    lista_sinal.sort()
+                    if all(item in lista_sinal for item in lista_decodificador[1]):
+                        decodificador["".join(lista_sinal)] = 3
+                        lista_decodificador[3] = lista_sinal
+                        lista_input.remove(sinal)
+                    elif all(item in lista_decodificador[3] + lista_decodificador[4] for item in lista_sinal):
+                        decodificador["".join(lista_sinal)] = 5
+                        lista_decodificador[5] = lista_sinal
+                        lista_input.remove(sinal)
+                    elif lista_decodificador[5] != ["z"] and lista_decodificador[3] != ["z"]:
+                        decodificador["".join(lista_sinal)] = 2
+                        lista_decodificador[2] = lista_sinal
+                        lista_input.remove(sinal)
+                elif len(sinal) == 6:
+                    lista_sinal = list(sinal)
+                    lista_sinal.sort()
+                    if all(item in lista_sinal for item in lista_decodificador[3] + lista_decodificador[4]):
+                        decodificador["".join(lista_sinal)] = 9
+                        lista_decodificador[9] = lista_sinal
+                        lista_input.remove(sinal)
+                    elif lista_decodificador[9] != ["z"] and all(item in lista_sinal for item in lista_decodificador[1]):
+                        decodificador["".join(lista_sinal)] = 0
+                        lista_decodificador[0] = lista_sinal
+                        lista_input.remove(sinal)
+                    elif lista_decodificador[9] != ["z"] and lista_decodificador[0] != ["z"]:
+                        decodificador["".join(lista_sinal)] = 6
+                        lista_decodificador[6] = lista_sinal
+                        lista_input.remove(sinal)
+        return decodificador
+    
+    def decodificador_saida(self, lista_saida: list, decodificador: dict):
+        for i in range(len(lista_saida)):
+            lista_saida[i] = list(lista_saida[i])
+            lista_saida[i].sort()
+            lista_saida[i] = decodificador["".join(lista_saida[i])]
+            lista_saida[i] = lista_saida[i] * 10**(len(lista_saida) -1 - i)
+        return sum(lista_saida)
+    
+    def soma_das_saidas(self, lista_de_sinais: list) -> int:
+        resultado = 0
+        for sinais in lista_de_sinais:
+            sinains_separados = self.converter_lista_de_sinais(sinais)
+            decodificador = self.decodifica_sete_segmentos(sinains_separados["input"])
+            valor_decodificado = self.decodificador_saida(sinains_separados["output"], decodificador)
+            resultado += valor_decodificado
+        return resultado
+

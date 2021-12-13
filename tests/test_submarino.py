@@ -662,4 +662,75 @@ def test_quando_passar_lista_e_media_calcular_o_minimo_combustivel():
     combustivel = submarino.calculo_minimo_combustivel_real(lista_caranguejos_int, media)
     assert combustivel == 168
 
+def test_quando_ler_entrada_deve_retornar_um_dicionario_com_lista_de_input_e_output():
+    submarino = Submarino()
+    caminho = "assets/lista_sinais_teste.txt"
+    lista_de_sinais = submarino.le_arquivo(caminho)
+    
+    sinais = submarino.converter_lista_de_sinais(lista_de_sinais[0])
 
+    assert sinais ==    {
+                            "input": ["be","cfbegad", "cbdgef", "fgaecd", "cgeb", "fdcge", "agebfd", "fecdb", "fabcd", "edb"],
+                            "output": ["fdgacbe", "cefdb", "cefbgd", "gcbe"]
+                        }
+
+def test_quando_receber_um_dicionario_deve_decodificar_a_saida():
+    submarino = Submarino()
+    caminho = "assets/lista_sinais_teste.txt"
+    lista_de_sinais = submarino.le_arquivo(caminho)
+    sinais = submarino.converter_lista_de_sinais(lista_de_sinais[0])
+
+    resultado = submarino.contar_saida_1_4_7_8(sinais)
+
+    valor_final = 0
+    for sinal in lista_de_sinais:
+        dict_sinal = submarino.converter_lista_de_sinais(sinal)
+        valor_final += submarino.contar_saida_1_4_7_8(dict_sinal)
+    
+    assert valor_final == 26
+
+
+def test_quando_passar_uma_lista_de_entrada_deve_retornar_dicionario():
+    submarino = Submarino()
+    lista_de_sinais = "acedgfb cdfbe gcdfa fbcad dab cefabd cdfgeb eafb cagedb ab | cdfeb fcadb cdfeb cdbaf"
+    sinais = submarino.converter_lista_de_sinais(lista_de_sinais)
+    sinal_input = sinais["input"]
+
+    traducao = submarino.decodifica_sete_segmentos(sinal_input)
+
+    assert traducao ==  {
+                            "abcdefg": 8,
+                            "bcdef": 5,
+                            "acdfg": 2,
+                            "abcdf": 3,
+                            "abd": 7,
+                            "abcdef": 9,
+                            "bcdefg": 6,
+                            "abef": 4,
+                            "abcdeg": 0,
+                            "ab": 1
+                        }
+
+def test_quando_passar_o_tradutor_e_a_saida_deve_retornar_o_valor_decodificado():
+    submarino = Submarino()
+    lista_de_sinais = "acedgfb cdfbe gcdfa fbcad dab cefabd cdfgeb eafb cagedb ab | cdfeb fcadb cdfeb cdbaf"
+    sinais = submarino.converter_lista_de_sinais(lista_de_sinais)
+    sinal_input = sinais["input"]
+    decodificador = submarino.decodifica_sete_segmentos(sinal_input)
+    sinal_saida = sinais["output"]
+    
+    valor_decodificado = submarino.decodificador_saida(sinal_saida, decodificador)
+
+    assert valor_decodificado == 5353
+
+def test_quando_passar_a_lista_de_codigo_deve_retornar_a_soma_da_saida():
+    submarino = Submarino()
+    caminho = "assets/lista_sinais_teste.txt"
+    lista_de_sinais = submarino.le_arquivo(caminho)
+
+    resultado = submarino.soma_das_saidas(lista_de_sinais)
+
+    assert resultado == 61229
+
+
+    

@@ -168,3 +168,28 @@ if __name__ == "__main__":
     media = int(round(sum(lista_caranguejos) / len(lista_caranguejos),0))
     combustivel = submarino.calculo_minimo_combustivel_real(lista_caranguejos, media)
     print(f"O valor minimo de combustivel gasto será: {combustivel}")
+    
+    estrela3 = 13
+    print()
+    print("*" * estrela2)
+    print("*" * estrela1, "Dia 8 - Parte 1.", "*" * estrela1)
+    print("*" * estrela2)
+    print()
+
+    sinais = submarino.le_arquivo("assets/lista_sinais.txt")
+    resultado = 0
+    for sinal in sinais:
+        dict_sinal = submarino.converter_lista_de_sinais(sinal)
+        resultado += submarino.contar_saida_1_4_7_8(dict_sinal)
+    
+    print(f"A quantidade de vezes que aparece 1, 4, 7 e 8 é: {resultado}")
+    
+    estrela3 = 13
+    print()
+    print("*" * estrela2)
+    print("*" * estrela1, "Dia 8 - Parte 2.", "*" * estrela1)
+    print("*" * estrela2)
+    print()
+
+    resultado = submarino.soma_das_saidas(sinais)
+    print(f"A soma de todas as saidas é: {resultado}")
