@@ -793,3 +793,50 @@ def test_quando_passar_um_mapa_deve_calcular_a_soma_do_risco_2():
     resultado = submarino.soma_do_menor_level_de_risco(mapa_altura)
 
     assert resultado == 17
+
+def test_quando_passar_um_mapa_deve_retornar_lista_menores_pontos():
+    submarino = Submarino()
+    caminho = "assets/mapa_altura_raw_teste.txt"
+    mapa_altura_raw = submarino.le_arquivo(caminho)
+    mapa_altura = submarino.gera_mapa_de_altura(mapa_altura_raw)
+
+    resultado = submarino.lista_menores_pontos(mapa_altura)
+
+    assert resultado == [(0,1),(0,9),(2,2),(4,6)]
+
+def test_quando_passar_um_ponto_deve_retornar_tamanho_da_bacia():
+    submarino = Submarino()
+    caminho = "assets/mapa_altura_raw_teste.txt"
+    mapa_altura_raw = submarino.le_arquivo(caminho)
+    mapa_altura = submarino.gera_mapa_de_altura(mapa_altura_raw)
+    posicao = (0,1)
+
+    resultado = submarino.calcula_tamanho_bacia(mapa_altura, posicao, [])
+
+    assert resultado == 3
+
+
+def test_quando_receber_uma_lista_de_cordenadas_deve_retornar_uma_lista_de_tamanho_das_bacias():
+    submarino = Submarino()
+    caminho = "assets/mapa_altura_raw_teste.txt"
+    mapa_altura_raw = submarino.le_arquivo(caminho)
+    mapa_altura = submarino.gera_mapa_de_altura(mapa_altura_raw)
+    
+    tamanho_bacia = submarino.calcula_tamanho_de_todas_bacias(mapa_altura)
+
+    assert tamanho_bacia == [3, 9, 14, 9]
+
+def test_quando_receber_uma_lista_de_tamanho_de_bacia_deve_retornar_os_3_maiores():    
+    submarino = Submarino()
+    caminho = "assets/mapa_altura_raw_teste.txt"
+    mapa_altura_raw = submarino.le_arquivo(caminho)
+    mapa_altura = submarino.gera_mapa_de_altura(mapa_altura_raw)
+    tamanho_bacia = submarino.calcula_tamanho_de_todas_bacias(mapa_altura)
+
+    tres_maiores_bacias = submarino.verifica_tres_maiores_bacias(tamanho_bacia)
+    
+    assert tres_maiores_bacias == [9, 9, 14]
+
+    def verifica_tres_maiores_bacias(self, lista_tamanhos_bacia: list) -> list:
+        lista_tamanhos_bacia.sort()
+        return lista_tamanhos_bacia[-3:]

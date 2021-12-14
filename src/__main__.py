@@ -207,3 +207,18 @@ if __name__ == "__main__":
     resultado = submarino.soma_do_menor_level_de_risco(mapa_altura)
 
     print(f"A soma do nivel de risco em todos os pontos do mapa é: {resultado}")
+        
+    
+    estrela3 = 13
+    print()
+    print("*" * estrela2)
+    print("*" * estrela1, "Dia 9 - Parte 2.", "*" * estrela1)
+    print("*" * estrela2)
+    print()
+
+    tamanho_bacia = submarino.calcula_tamanho_de_todas_bacias(mapa_altura)
+    maiores_bacias = submarino.verifica_tres_maiores_bacias(tamanho_bacia)
+
+    resultado = maiores_bacias[0] * maiores_bacias[1] * maiores_bacias[2]
+
+    print(f"O produto das 3 maiores bacias é: {resultado}")

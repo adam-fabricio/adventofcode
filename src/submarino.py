@@ -474,7 +474,6 @@ class Submarino(object):
         numero_linhas = len(mapa)
         numero_coluna = len(mapa[0])
         adjacente = []
-        
         if posicao[0] != 0:
             adjacente.append((posicao[0] - 1, posicao[1]))
         if posicao[0] != numero_linhas - 1:
@@ -497,6 +496,42 @@ class Submarino(object):
                 if acumulador == 0:
                     resultado += mapa[l][c] + 1
         return resultado
-            
+    
+    def lista_menores_pontos(self, mapa:list) -> list:
+        resultado = []
+        for l in range(len(mapa)):
+            for c in range(len(mapa[0])):
+                adjacentes = self.lista_adjacentes(mapa,(l,c))
+                acumulador = 0
+                for p in adjacentes:
+                    if mapa[l][c] >= mapa[p[0]][p[1]]:
+                        acumulador = 1
+                if acumulador == 0:
+                    resultado.append((l, c))
+        return resultado
 
+    def calcula_tamanho_bacia(self, mapa:list, posicao: tuple, visitados: list) -> int:
+        resultado = 0
+        adjacentes = self.lista_adjacentes(mapa, posicao)
+        for v in visitados:
+            if v in adjacentes:
+                adjacentes.remove(v)
+        for p in adjacentes:
+            if mapa[p[0]][p[1]] < 9:
+                for a in adjacentes:
+                    visitados.append(a)
+                visitados.append(posicao)
+                resultado += self.calcula_tamanho_bacia(mapa, (p[0], p[1]), visitados)
+        return resultado + 1
         
+    def calcula_tamanho_de_todas_bacias(self, mapa: list) -> list:
+        lista_pontos_criticos = self.lista_menores_pontos(mapa)
+        tamanho_bacia = []
+        for pontos_criticos in lista_pontos_criticos:
+            tamanho_bacia.append(self.calcula_tamanho_bacia(mapa, pontos_criticos, []))
+        
+        return tamanho_bacia
+
+    def verifica_tres_maiores_bacias(self, lista_tamanhos_bacia: list) -> list:
+        lista_tamanhos_bacia.sort()
+        return lista_tamanhos_bacia[-3:]
