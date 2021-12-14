@@ -733,4 +733,63 @@ def test_quando_passar_a_lista_de_codigo_deve_retornar_a_soma_da_saida():
     assert resultado == 61229
 
 
+def test_quando_ler_arquivo_deve_retornar_uma_lista_mapa_de_altura():
+    submarino = Submarino()
+    caminho = "assets/mapa_altura_raw_teste.txt"
+    mapa_altura_raw = submarino.le_arquivo(caminho)
     
+    mapa_altura = submarino.gera_mapa_de_altura(mapa_altura_raw)
+
+    assert mapa_altura ==   [
+                                [2, 1, 9, 9, 9, 4, 3, 2, 1, 0],
+                                [3, 9, 8, 7, 8, 9, 4, 9, 2, 1],
+                                [9, 8, 5, 6, 7, 8, 9, 8, 9, 2],
+                                [8, 7, 6, 7, 8, 9, 6, 7, 8, 9],
+                                [9, 8, 9, 9, 9, 6, 5, 6, 7, 8]
+                            ]
+    
+def test_quando_passar_uma_posicao_deve_retornar_par_de_adjacente():
+    submarino = Submarino()
+    posicao = (0,0)
+    mapa_altura =   [
+                                [2, 1, 9, 9, 9, 4, 3, 2, 1, 0],
+                                [3, 9, 8, 7, 8, 9, 4, 9, 2, 1],
+                                [9, 8, 5, 6, 7, 8, 9, 8, 9, 2],
+                                [8, 7, 6, 7, 8, 9, 6, 7, 8, 9],
+                                [9, 8, 9, 9, 9, 6, 5, 6, 7, 8]
+                            ]
+    
+    for l in range(len(mapa_altura)):
+        for c in range(len(mapa_altura[0])):
+            print(f"posicao ({l}, {c}).")
+            print(submarino.lista_adjacentes(mapa_altura, (l, c)))
+            print()
+
+    adjacentes = submarino.lista_adjacentes(mapa_altura, posicao)
+
+    assert adjacentes == [(1,0), (0,1)]
+
+def test_quando_passar_um_mapa_deve_calcular_a_soma_do_risco():
+    submarino = Submarino()
+    caminho = "assets/mapa_altura_raw_teste.txt"
+    mapa_altura_raw = submarino.le_arquivo(caminho)
+    mapa_altura = submarino.gera_mapa_de_altura(mapa_altura_raw)
+
+    resultado = submarino.soma_do_menor_level_de_risco(mapa_altura)
+
+    assert resultado == 15
+
+def test_quando_passar_um_mapa_deve_calcular_a_soma_do_risco_2():
+    submarino = Submarino()
+    mapa_altura =   [
+                                [2, 1, 9, 9, 9, 4, 3, 2, 1, 0],
+                                [3, 9, 8, 7, 8, 9, 4, 9, 2, 1],
+                                [9, 8, 5, 6, 7, 8, 9, 8, 9, 0],
+                                [8, 7, 6, 7, 8, 9, 6, 7, 8, 9],
+                                [0, 8, 9, 9, 9, 6, 5, 6, 7, 8]
+                            ]
+
+
+    resultado = submarino.soma_do_menor_level_de_risco(mapa_altura)
+
+    assert resultado == 17

@@ -461,3 +461,42 @@ class Submarino(object):
             resultado += valor_decodificado
         return resultado
 
+    def gera_mapa_de_altura(self, mapa_de_altura_raw: list) -> list:
+        mapa = []
+        for linha in mapa_de_altura_raw:
+            lista = list(linha)
+            lista_inteiro = [int(i) for i in lista]
+            mapa.append(lista_inteiro)
+        return mapa
+    
+
+    def lista_adjacentes(self, mapa: list, posicao: tuple) -> list:
+        numero_linhas = len(mapa)
+        numero_coluna = len(mapa[0])
+        adjacente = []
+        
+        if posicao[0] != 0:
+            adjacente.append((posicao[0] - 1, posicao[1]))
+        if posicao[0] != numero_linhas - 1:
+            adjacente.append((posicao[0] + 1, posicao[1]))
+        if posicao[1] != 0:
+            adjacente.append((posicao[0], posicao[1] - 1))
+        if posicao[1] != numero_coluna - 1:
+            adjacente.append((posicao[0], posicao[1] + 1))
+        return(adjacente)
+    
+    def soma_do_menor_level_de_risco(self, mapa: list) -> int:
+        resultado = 0
+        for l in range(len(mapa)):
+            for c in range(len(mapa[0])):
+                adjacentes = self.lista_adjacentes(mapa,(l,c))
+                acumulador = 0
+                for p in adjacentes:
+                    if mapa[l][c] >= mapa[p[0]][p[1]]:
+                        acumulador = 1
+                if acumulador == 0:
+                    resultado += mapa[l][c] + 1
+        return resultado
+            
+
+        

@@ -193,3 +193,17 @@ if __name__ == "__main__":
 
     resultado = submarino.soma_das_saidas(sinais)
     print(f"A soma de todas as saidas é: {resultado}")
+    
+    estrela3 = 13
+    print()
+    print("*" * estrela2)
+    print("*" * estrela1, "Dia 9 - Parte 1.", "*" * estrela1)
+    print("*" * estrela2)
+    print()
+
+    caminho = "assets/mapa_altura_raw.txt"
+    mapa_altura_raw = submarino.le_arquivo(caminho)
+    mapa_altura = submarino.gera_mapa_de_altura(mapa_altura_raw)
+    resultado = submarino.soma_do_menor_level_de_risco(mapa_altura)
+
+    print(f"A soma do nivel de risco em todos os pontos do mapa é: {resultado}")
