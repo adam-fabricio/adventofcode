@@ -468,11 +468,9 @@ def test_quando_se_passar_18_dias_deve_retornar_a_seguinte_lista():
     submarino = Submarino()
     caminho = "assets/idade_lanternfish_test.txt"
     lista_idades = submarino.le_arquivo(caminho)[0].split(',')
-    print(f"Estado inicial: {lista_idades}")
     
     for dia in range(18):
         lista_idades = submarino.proximo_dia_lanterfish(lista_idades)
-        print(f"Após {dia} dias: {lista_idades}")
     
     assert lista_idades == [6,0,6,4,5,6,0,1,1,2,6,0,1,1,1,2,2,3,3,4,6,7,8,8,8,8]
     assert len(lista_idades) == 26
@@ -759,11 +757,6 @@ def test_quando_passar_uma_posicao_deve_retornar_par_de_adjacente():
                                 [9, 8, 9, 9, 9, 6, 5, 6, 7, 8]
                             ]
     
-    for l in range(len(mapa_altura)):
-        for c in range(len(mapa_altura[0])):
-            print(f"posicao ({l}, {c}).")
-            print(submarino.lista_adjacentes(mapa_altura, (l, c)))
-            print()
 
     adjacentes = submarino.lista_adjacentes(mapa_altura, posicao)
 
@@ -837,6 +830,93 @@ def test_quando_receber_uma_lista_de_tamanho_de_bacia_deve_retornar_os_3_maiores
     
     assert tres_maiores_bacias == [9, 9, 14]
 
-    def verifica_tres_maiores_bacias(self, lista_tamanhos_bacia: list) -> list:
-        lista_tamanhos_bacia.sort()
-        return lista_tamanhos_bacia[-3:]
+
+def test_quando_ler_uma_linha_do_subsistema_deve_retornar_o_caracter_com_erro_ou_vazio():
+    submarino = Submarino()
+    caminho = "assets/subsistema_de_navegacao_teste.txt"
+    subsitema_de_navegacao = submarino.le_arquivo(caminho)
+
+    erro = submarino.verifica_corrupcao_linha(list(subsitema_de_navegacao[0]))
+
+    assert erro == None
+
+def test_quando_ler_subsistema_de_navegacao_deve_retornar_lista_de_erros():
+    submarino = Submarino()
+    caminho = "assets/subsistema_de_navegacao_teste.txt"
+    subsitema_de_navegacao = submarino.le_arquivo(caminho)
+
+    lista_de_erros = submarino.verifica_corrupcao_arquivo(subsitema_de_navegacao)
+
+    assert lista_de_erros == ["}", ")", "]", ")", ">"]
+
+
+def test_quando_ler_lista_de_erros_deve_retornar_lista_de_pontos():
+    submarino = Submarino()
+    caminho = "assets/subsistema_de_navegacao_teste.txt"
+    subsitema_de_navegacao = submarino.le_arquivo(caminho)
+    lista_de_erros = submarino.verifica_corrupcao_arquivo(subsitema_de_navegacao)
+
+    pontos_erros = submarino.calcula_pontos_erros(lista_de_erros)
+
+    assert pontos_erros == [1197, 3, 57, 3, 25137]
+    assert sum(pontos_erros) == 26397
+
+def test_quando_passar_lista_deve_remover_as_linhas_com_erros():
+    submarino = Submarino()
+    caminho = "assets/subsistema_de_navegacao_teste.txt"
+    subsitema_de_navegacao = submarino.le_arquivo(caminho)
+
+    erros_removidos = submarino.remove_linhas_de_erro_de_navegacao(subsitema_de_navegacao)
+
+    lista_de_erros = submarino.verifica_corrupcao_arquivo(erros_removidos)
+
+    assert lista_de_erros == []
+
+
+def test_quando_passar_uma_lista_incompleta_deve_retornar_lista_de_caracter_para_fechar():
+    submarino = Submarino()
+    caminho = "assets/subsistema_de_navegacao_teste.txt"
+    subsitema_de_navegacao = submarino.le_arquivo(caminho)
+    erros_removidos = submarino.remove_linhas_de_erro_de_navegacao(subsitema_de_navegacao)
+
+    lista_abertos = submarino.gera_lista_caracter_abertos(list(erros_removidos[0]))
+    
+    converte_para_fechado = submarino.inverte_lista_caracter(lista_abertos)
+    assert converte_para_fechado[::-1] == ["}", "}", "]", "]", ")", "}", ")", "]"]
+
+
+def test_quando_passar_uma_lista_de_caracter_faltante_deve_calcular_pontos2():
+    submarino = Submarino()
+    caminho = "assets/subsistema_de_navegacao_teste.txt"
+    subsitema_de_navegacao = submarino.le_arquivo(caminho)
+    erros_removidos = submarino.remove_linhas_de_erro_de_navegacao(subsitema_de_navegacao)
+    lista_abertos = submarino.gera_lista_caracter_abertos(list(erros_removidos[0]), [])
+    converte_para_fechado = submarino.inverte_lista_caracter(lista_abertos)
+
+    pontos = submarino.calcula_pontos_faltantes(converte_para_fechado)
+
+    assert pontos == 288957
+
+def test_quando_passar_uma_lista_de_pontos_deve_retornar_uma_lista_de_pontos():
+    submarino = Submarino()
+    caminho = "assets/subsistema_de_navegacao_teste.txt"
+    subsitema_de_navegacao = submarino.le_arquivo(caminho)
+    erros_removidos = submarino.remove_linhas_de_erro_de_navegacao(subsitema_de_navegacao)
+
+    pontos = submarino.calcula_lista_pontos_faltantes(erros_removidos)
+    
+    assert pontos == [288957, 5566, 1480781, 995444, 294]
+
+def test_quando_passar_uma_lista_de_pontos_deve_ordernar_a_mediana():
+    submarino = Submarino()
+    pontos = [288957, 5566, 1480781, 995444, 294]
+
+    mediana = submarino.calcula_mediana_lista(pontos)
+
+    assert mediana == 288957
+
+def calcula_mediana_lista(self, lista_de_pontos: list) -> int:
+    lista_de_pontos.sort()
+    mediana = int(len(lista_de_pontos) / 2)
+    
+    return lista_de_pontos[mediana]

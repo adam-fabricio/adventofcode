@@ -535,3 +535,113 @@ class Submarino(object):
     def verifica_tres_maiores_bacias(self, lista_tamanhos_bacia: list) -> list:
         lista_tamanhos_bacia.sort()
         return lista_tamanhos_bacia[-3:]
+
+    def verifica_corrupcao_linha(self, linha_navegacao: list, caracter_abertos: list = []) -> str:
+        caracter_abertura = ["[", "(", "{", "<"]
+        caracter_fechamento = ["]", ")", "}", ">"]
+        if linha_navegacao:
+            caracter_atual = linha_navegacao.pop(0)
+        else:
+            return 
+        
+        if caracter_atual in caracter_abertura:
+            caracter_abertos.append(caracter_atual)
+            return self.verifica_corrupcao_linha(linha_navegacao, caracter_abertos)
+        else:
+            if caracter_fechamento.index(caracter_atual) == caracter_abertura.index(caracter_abertos.pop()):
+                return self.verifica_corrupcao_linha(linha_navegacao, caracter_abertos)
+            else:
+                return caracter_atual
+                
+
+    def verifica_corrupcao_arquivo(self, subsitema_navegacao: list) -> list:
+        lista_erros = []
+
+        for linha in subsitema_navegacao:
+            erro = self.verifica_corrupcao_linha(list(linha))
+            if erro:
+                lista_erros.append(erro)
+        
+        return lista_erros
+ 
+    def calcula_pontos_erros(self, lista_erros:list) -> list:
+        for i in range(len(lista_erros)):
+            if lista_erros[i] == ")":
+                lista_erros[i] = 3
+            elif lista_erros[i] == "]":
+                lista_erros[i] = 57
+            elif lista_erros[i] == "}":
+                lista_erros[i] = 1197
+            elif lista_erros[i] == ">":
+                lista_erros[i] = 25137
+        return lista_erros
+
+    def remove_linhas_de_erro_de_navegacao(self, subsitema_navegacao: list) -> list:
+        sistema_navegacao_sem_erros = []
+        for i in range(len(subsitema_navegacao)):
+            erro = self.verifica_corrupcao_linha(list(subsitema_navegacao[i]))
+            if not erro:
+                sistema_navegacao_sem_erros.append(subsitema_navegacao[i])
+                
+        return sistema_navegacao_sem_erros
+    
+    def gera_lista_caracter_abertos(self, linha_navegacao: list, caracter_abertos: list = []) -> str:
+        caracter_abertura = ["[", "(", "{", "<"]
+        caracter_fechamento = ["]", ")", "}", ">"]
+        if linha_navegacao:
+            caracter_atual = linha_navegacao.pop(0)
+        else:
+            return caracter_abertos
+        
+        if caracter_atual in caracter_abertura:
+            caracter_abertos.append(caracter_atual)
+            return self.gera_lista_caracter_abertos(linha_navegacao, caracter_abertos)
+        else:
+            if caracter_fechamento.index(caracter_atual) == caracter_abertura.index(caracter_abertos.pop()):
+                return self.gera_lista_caracter_abertos(linha_navegacao, caracter_abertos)
+            else:
+                return caracter_atual
+
+    def inverte_lista_caracter(self, lista_caracter_aberto: list) -> list:
+        caracter_abertura = ["[", "(", "{", "<"]
+        caracter_fechamento = ["]", ")", "}", ">"]
+        
+        for i in range(len(lista_caracter_aberto)):
+            index = caracter_abertura.index(lista_caracter_aberto[i])
+            lista_caracter_aberto[i] = caracter_fechamento[index]
+        
+        return lista_caracter_aberto
+        
+    def calcula_pontos_faltantes(self, caracters_faltantes: list) -> int:
+        caracters_faltantes = caracters_faltantes[::-1]
+        
+        for i in range(len(caracters_faltantes)):
+            if caracters_faltantes[i] == ")":
+                caracters_faltantes[i] = 1
+            elif caracters_faltantes[i] == "]":
+                caracters_faltantes[i] = 2
+            elif caracters_faltantes[i] == "}":
+                caracters_faltantes[i] = 3
+            elif caracters_faltantes[i] == ">":
+                caracters_faltantes[i] = 4
+        pontos = 0
+        for ponto in caracters_faltantes:
+            pontos = pontos * 5 + ponto
+        
+        return pontos
+
+    def calcula_lista_pontos_faltantes(self, lista_navegacao: list) -> list:
+        pontos = []
+        
+        for linha in lista_navegacao:
+            lista_abertos = self.gera_lista_caracter_abertos(list(linha), [])
+            lista_fechado = self.inverte_lista_caracter(lista_abertos)
+            pontos.append(self.calcula_pontos_faltantes(lista_fechado))
+        
+        return pontos
+
+    def calcula_mediana_lista(self, lista_de_pontos: list) -> int:
+        lista_de_pontos.sort()
+        mediana = int(len(lista_de_pontos) / 2)
+        
+        return lista_de_pontos[mediana]

@@ -3,10 +3,12 @@ from submarino import Submarino
 if __name__ == "__main__":
 
     estrela1 = 8
-    estrela2 = 34
+    estrela2 = 35
+    estrela3 = 13
+
     print()
     print("*" * estrela2)
-    print("*" * estrela1, "Dia 1 - Parte 1.", "*" * estrela1)
+    print("*" * estrela1, "Dia 01 - Parte 1.", "*" * estrela1)
     print("*" * estrela2)
     print()
 
@@ -20,7 +22,7 @@ if __name__ == "__main__":
 
     print()
     print("*" * estrela2)
-    print("*" * estrela1, "Dia 1 - Parte 2.", "*" * estrela1)
+    print("*" * estrela1, "Dia 01 - Parte 2.", "*" * estrela1)
     print("*" * estrela2)
     print()
 
@@ -29,10 +31,9 @@ if __name__ == "__main__":
     resultado = submarino.sonar_contagem_de_ocorrencia(relatorio, "aumentou")
     print(f"Após o filtro o valor aumentou {resultado} vezes.")
     
-    estrela3 = 13
     print()
     print("*" * estrela2)
-    print("*" * estrela3, "Dia 2.", "*" * estrela3)
+    print("*" * estrela3, "Dia 02.", "*" * estrela3)
     print("*" * estrela2)
     print()
 
@@ -43,10 +44,9 @@ if __name__ == "__main__":
 
     print(f"A posição do submarino é {str(posicao)} e o seu produto é {produto_da_posicao}")
 
-    estrela3 = 13
     print()
     print("*" * estrela2)
-    print("*" * estrela1, "Dia 3 - Parte 1.", "*" * estrela1)
+    print("*" * estrela1, "Dia 03 - Parte 1.", "*" * estrela1)
     print("*" * estrela2)
     print()
 
@@ -61,7 +61,7 @@ if __name__ == "__main__":
 
     print()
     print("*" * estrela2)
-    print("*" * estrela1, "Dia 3 - Parte 2.", "*" * estrela1)
+    print("*" * estrela1, "Dia 03 - Parte 2.", "*" * estrela1)
     print("*" * estrela2)
     print()
 
@@ -73,10 +73,9 @@ if __name__ == "__main__":
     print(f"O valor de oxigênio gerado é: {gerador_de_oxigenio * purificador_de_CO2}.")
 
 
-    estrela3 = 13
     print()
     print("*" * estrela2)
-    print("*" * estrela1, "Dia 4 - Parte 1.", "*" * estrela1)
+    print("*" * estrela1, "Dia 04 - Parte 1.", "*" * estrela1)
     print("*" * estrela2)
     print()
 
@@ -86,17 +85,16 @@ if __name__ == "__main__":
     
     print()
     print("*" * estrela2)
-    print("*" * estrela1, "Dia 4 - Parte 2.", "*" * estrela1)
+    print("*" * estrela1, "Dia 04 - Parte 2.", "*" * estrela1)
     print("*" * estrela2)
     print()
     
     submarino.bingo.jogar_2(dados_bingo)
     print(f"Resultado do bingo é {submarino.bingo.resultado_vencedor[-1]}")
 
-    estrela3 = 13
     print()
     print("*" * estrela2)
-    print("*" * estrela3, "Dia 5.", "*" * estrela3)
+    print("*" * estrela3, "Dia 05.", "*" * estrela3)
     print("*" * estrela2)
     print()
 
@@ -111,10 +109,9 @@ if __name__ == "__main__":
     print(f"A soma dos valores criticos é {soma_de_pontos_criticos}")
 
     
-    estrela3 = 13
     print()
     print("*" * estrela2)
-    print("*" * estrela1, "Dia 6 - Parte 1.", "*" * estrela1)
+    print("*" * estrela1, "Dia 06 - Parte 1.", "*" * estrela1)
     print("*" * estrela2)
     print()
 
@@ -127,10 +124,9 @@ if __name__ == "__main__":
     print(f"Após 80 dias terão {len(lista_idades)} lanternfish.") 
 
     
-    estrela3 = 13
     print()
     print("*" * estrela2)
-    print("*" * estrela1, "Dia 6 - Parte 2.", "*" * estrela1)
+    print("*" * estrela1, "Dia 06 - Parte 2.", "*" * estrela1)
     print("*" * estrela2)
     print()
 
@@ -142,10 +138,9 @@ if __name__ == "__main__":
     
     print(f"Após 80 dias terão {sum(ciclos.values())} lanternfish.")
 
-    estrela3 = 13
     print()
     print("*" * estrela2)
-    print("*" * estrela1, "Dia 7 - Parte 1.", "*" * estrela1)
+    print("*" * estrela1, "Dia 07 - Parte 1.", "*" * estrela1)
     print("*" * estrela2)
     print()
 
@@ -158,10 +153,9 @@ if __name__ == "__main__":
 
     print(f"O minimo de combustivel gasto para linhar a posição é: {combustivel}")
 
-    estrela3 = 13
     print()
     print("*" * estrela2)
-    print("*" * estrela1, "Dia 7 - Parte 2.", "*" * estrela1)
+    print("*" * estrela1, "Dia 07 - Parte 2.", "*" * estrela1)
     print("*" * estrela2)
     print()
 
@@ -169,10 +163,9 @@ if __name__ == "__main__":
     combustivel = submarino.calculo_minimo_combustivel_real(lista_caranguejos, media)
     print(f"O valor minimo de combustivel gasto será: {combustivel}")
     
-    estrela3 = 13
     print()
     print("*" * estrela2)
-    print("*" * estrela1, "Dia 8 - Parte 1.", "*" * estrela1)
+    print("*" * estrela1, "Dia 08 - Parte 1.", "*" * estrela1)
     print("*" * estrela2)
     print()
 
@@ -184,20 +177,18 @@ if __name__ == "__main__":
     
     print(f"A quantidade de vezes que aparece 1, 4, 7 e 8 é: {resultado}")
     
-    estrela3 = 13
     print()
     print("*" * estrela2)
-    print("*" * estrela1, "Dia 8 - Parte 2.", "*" * estrela1)
+    print("*" * estrela1, "Dia 08 - Parte 2.", "*" * estrela1)
     print("*" * estrela2)
     print()
 
     resultado = submarino.soma_das_saidas(sinais)
     print(f"A soma de todas as saidas é: {resultado}")
     
-    estrela3 = 13
     print()
     print("*" * estrela2)
-    print("*" * estrela1, "Dia 9 - Parte 1.", "*" * estrela1)
+    print("*" * estrela1, "Dia 09 - Parte 1.", "*" * estrela1)
     print("*" * estrela2)
     print()
 
@@ -209,10 +200,9 @@ if __name__ == "__main__":
     print(f"A soma do nivel de risco em todos os pontos do mapa é: {resultado}")
         
     
-    estrela3 = 13
     print()
     print("*" * estrela2)
-    print("*" * estrela1, "Dia 9 - Parte 2.", "*" * estrela1)
+    print("*" * estrela1, "Dia 09 - Parte 2.", "*" * estrela1)
     print("*" * estrela2)
     print()
 
@@ -222,3 +212,30 @@ if __name__ == "__main__":
     resultado = maiores_bacias[0] * maiores_bacias[1] * maiores_bacias[2]
 
     print(f"O produto das 3 maiores bacias é: {resultado}")
+
+    print()
+    print("*" * estrela2)
+    print("*" * estrela1, "Dia 10 - Parte 1.", "*" * estrela1)
+    print("*" * estrela2)
+    print()
+
+
+    caminho = "assets/subsistema_de_navegacao.txt"
+    subsitema_de_navegacao = submarino.le_arquivo(caminho)
+    lista_de_erros = submarino.verifica_corrupcao_arquivo(subsitema_de_navegacao)
+    pontos_erros = submarino.calcula_pontos_erros(lista_de_erros)
+
+    print(f"A soma dos erros no subsistema de navegacao é: {sum(pontos_erros)}")
+
+    print()
+    print("*" * estrela2)
+    print("*" * estrela1, "Dia 10 - Parte 2.", "*" * estrela1)
+    print("*" * estrela2)
+    print()
+
+    erros_removidos = submarino.remove_linhas_de_erro_de_navegacao(subsitema_de_navegacao)
+    pontos = submarino.calcula_lista_pontos_faltantes(erros_removidos)
+    mediana = submarino.calcula_mediana_lista(pontos)
+
+    print(f"A mediana da pontuação é: {mediana}")
+    
