@@ -239,3 +239,26 @@ if __name__ == "__main__":
 
     print(f"A mediana da pontuação é: {mediana}")
     
+
+    print()
+    print("*" * estrela2)
+    print("*" * estrela1, "Dia 11 - Parte 1.", "*" * estrela1)
+    print("*" * estrela2)
+    print()
+
+    caminho = "assets/polvo_energia.txt"
+    energia_raw = submarino.le_arquivo(caminho)
+    energia = submarino.gera_matriz(energia_raw)
+    dicionario_energia = submarino.energia_apos_passos(energia, 100)
+
+    print(f"O total de piscadas após 100 passos são: {dicionario_energia['piscados']}")
+
+    passo = submarino.encontra_sincronismo(energia)
+
+    print()
+    print("*" * estrela2)
+    print("*" * estrela1, "Dia 11 - Parte 2.", "*" * estrela1)
+    print("*" * estrela2)
+    print()
+
+    print(f"O primeiro passo onde todos os polvos piscam é: {passo}")

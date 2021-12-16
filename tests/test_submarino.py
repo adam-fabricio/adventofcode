@@ -123,7 +123,7 @@ def test_quando_receber_um_conjunto_de_bit_deve_segregar_os_bits():
     entrada = "10100"
     saida = [1, 0, 1, 0, 0]
 
-    dicionario = submarino.separa_bit_do_diagnostico(entrada)
+    dicionario = submarino.converte_linha_em_lista(entrada)
 
     assert dicionario == saida
 
@@ -904,6 +904,7 @@ def test_quando_passar_uma_lista_de_pontos_deve_retornar_uma_lista_de_pontos():
     erros_removidos = submarino.remove_linhas_de_erro_de_navegacao(subsitema_de_navegacao)
 
     pontos = submarino.calcula_lista_pontos_faltantes(erros_removidos)
+    print(pontos)
     
     assert pontos == [288957, 5566, 1480781, 995444, 294]
 
@@ -915,8 +916,111 @@ def test_quando_passar_uma_lista_de_pontos_deve_ordernar_a_mediana():
 
     assert mediana == 288957
 
-def calcula_mediana_lista(self, lista_de_pontos: list) -> int:
-    lista_de_pontos.sort()
-    mediana = int(len(lista_de_pontos) / 2)
+def test_quando_passar_dia_deve_somar_um_de_energia_lista_de_inteiros():
+    submarino = Submarino()
+    caminho = "assets/polvo_energia_teste.txt"
+    energia_polvo_raw = submarino.le_arquivo(caminho)
+    energia_polvo = submarino.gera_matriz(energia_polvo_raw)
+    energia_polvo_resultado_raw =   [
+                                        "6594254334",
+                                        "3856965822",
+                                        "6375667284",
+                                        "7252447257",
+                                        "7468496589",
+                                        "5278635756",
+                                        "3287952832",
+                                        "7993992245",
+                                        "5957959665",
+                                        "6394862637",
+                                    ]
+    energia_polvo_resultado = submarino.gera_matriz(energia_polvo_resultado_raw)
     
-    return lista_de_pontos[mediana]
+    energia_polvo_proximo_dia = submarino.soma_um_na_matriz(energia_polvo)
+
+    assert energia_polvo_proximo_dia["matriz"] == energia_polvo_resultado
+
+
+def test_quando_energia_passar_10_deve_somar_1_adjacentes():
+    submarino = Submarino()
+    energia_raw =           [
+                                "6594254334",
+                                "3856965822",
+                                "6375667284",
+                                "7252447257",
+                                "7468496589",
+                                "5278635756",
+                                "3287952832",
+                                "7993992245",
+                                "5957959665",
+                                "6394862637",
+                            ]
+    energia_raw_result =    [
+                                "8807476555",
+                                "5089087054",
+                                "8597889608",
+                                "8485769600",
+                                '8700908800',
+                                '6600088989',
+                                '6800005943',
+                                '0000007456',
+                                '9000000876',
+                                '8700006848',
+                            ]
+    energia = submarino.gera_matriz(energia_raw)
+    energia_resultado = submarino.gera_matriz(energia_raw_result)
+
+    energia = submarino.soma_um_na_matriz(energia) 
+
+    assert energia["matriz"] == energia_resultado
+    assert energia["piscados"] == 35
+
+
+def test_quando_energia_passar_100_passos_deve_retornar():
+    submarino = Submarino()
+    energia_raw =           [
+                                "6594254334",
+                                "3856965822",
+                                "6375667284",
+                                "7252447257",
+                                "7468496589",
+                                "5278635756",
+                                "3287952832",
+                                "7993992245",
+                                "5957959665",
+                                "6394862637",
+                            ]
+    energia_raw_result =    [
+                                '0397666866',
+                                '0749766918',
+                                '0053976933',
+                                '0004297822',
+                                '0004229892',
+                                '0053222877',
+                                '0532222966',
+                                '9322228966',
+                                '7922286866',
+                                '6789998766',
+
+                            ]
+    caminho = "assets/polvo_energia_teste.txt"
+    energia_raw = submarino.le_arquivo(caminho)
+    energia = submarino.gera_matriz(energia_raw)
+    energia_resultado = submarino.gera_matriz(energia_raw_result)
+
+    energia = submarino.energia_apos_passos(energia, 100)
+    submarino.imprimi_matriz(energia["matriz"])
+
+    assert energia["matriz"] == energia_resultado
+    assert energia["piscados"] == 1656
+
+def test_quando_passar_a_lista_deve_encontrar_quando_os_polvos_vao_estar_sincronizados():
+    submarino = Submarino()
+    caminho = "assets/polvo_energia_teste.txt"
+    energia_raw = submarino.le_arquivo(caminho)
+    energia = submarino.gera_matriz(energia_raw)
+
+    passo = submarino.encontra_sincronismo(energia)
+
+    assert passo == 195
+
+

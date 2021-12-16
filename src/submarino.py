@@ -155,10 +155,10 @@ class Submarino(object):
             elif direcao == "down":
                 self.down(valor)
 
-    def separa_bit_do_diagnostico(self, bits: str) -> list:
+    def converte_linha_em_lista(self, lista: str) -> list:
         """Individualiza os bits da cadeia e forma um dicionario"""
 
-        return list(map(int, list(bits)))
+        return list(map(int, list(lista)))
 
     def consolidar_relatorio(self, relatorio: list) -> dict:
         """Consolida os valores dos bits."""
@@ -469,7 +469,6 @@ class Submarino(object):
             mapa.append(lista_inteiro)
         return mapa
     
-
     def lista_adjacentes(self, mapa: list, posicao: tuple) -> list:
         numero_linhas = len(mapa)
         numero_coluna = len(mapa[0])
@@ -553,7 +552,6 @@ class Submarino(object):
             else:
                 return caracter_atual
                 
-
     def verifica_corrupcao_arquivo(self, subsitema_navegacao: list) -> list:
         lista_erros = []
 
@@ -645,3 +643,115 @@ class Submarino(object):
         mediana = int(len(lista_de_pontos) / 2)
         
         return lista_de_pontos[mediana]
+
+    def gera_matriz(self, lista_de_linhas:list) -> list:
+        return [[int(lista_de_linhas[linha][coluna]) for coluna in range(len(lista_de_linhas[linha]))] for linha in range(len(lista_de_linhas))]
+
+
+    def soma_um_na_matriz(self, matriz: list) -> list:
+        matriz = [[item + 1 for item in linha] for linha in matriz]
+        matriz = self.resolve_piscada_polvo(matriz, [])
+        return matriz
+    
+    def resolve_piscada_polvo(self, matriz: list, ja_piscado: list) -> list:
+        quantidade_ja_piscado = len(ja_piscado)
+        posicao_acima_10 = [(linha, coluna) for linha in range(len(matriz)) for coluna in range(len(matriz[linha]))  if matriz[linha][coluna] >= 10] 
+        for posicao in posicao_acima_10:
+            if posicao not in ja_piscado:
+                ja_piscado.append(posicao)
+                matriz = self.polvo_pisca(matriz, posicao)
+        if quantidade_ja_piscado != len(ja_piscado):
+            return self.resolve_piscada_polvo(matriz, ja_piscado)
+        else:
+            matriz = self.remove_maior_dez(matriz)
+            return {"matriz":matriz, "piscados": len(ja_piscado)}
+        
+    def remove_maior_dez(self, matriz: list) -> list:
+        return [[0 if item >= 10 else item for item in linha] for linha in matriz] 
+        
+    def polvo_pisca(self, matriz: list, posicao: tuple) -> list:
+        adjacente = self.lista_adjacentes_aprimorado(matriz, posicao)
+        for p in adjacente:
+            matriz[p[0]][p[1]] += 1
+        return matriz
+
+    def imprimi_matriz(self, matriz:list) -> None:
+        [print("".join([str(item) for item in linha])) for linha in matriz]
+    
+    def lista_adjacentes_aprimorado(self, matriz: list, posicao: tuple) -> list:
+        numero_linhas = len(matriz)
+        numero_coluna = len(matriz[0])
+        adjacente = []
+        #  Não estou na primeira linha
+        if posicao[0] != 0:
+            adjacente.append((posicao[0] - 1, posicao[1]))
+            #  Nao estou na primeira coluna
+            if posicao[1] != 0:
+                adjacente.append((posicao[0] - 1, posicao[1] - 1))
+            #  Não estou na última coluna
+            if posicao[1] != numero_coluna - 1:
+                adjacente.append((posicao[0] - 1, posicao[1] + 1))
+        # Não estou na ultima linha
+        if posicao[0] != numero_linhas - 1:
+            adjacente.append((posicao[0] + 1, posicao[1]))
+            #Não estou na primeira coluna
+            if posicao[1] != 0:
+                adjacente.append((posicao[0] + 1, posicao[1] - 1))
+            #  Não estou na última coluna
+            if posicao[1] != numero_coluna - 1:
+                adjacente.append((posicao[0] + 1, posicao[1] + 1))
+        if posicao[1] != 0:
+            adjacente.append((posicao[0], posicao[1] - 1))
+        if posicao[1] != numero_coluna - 1:
+            adjacente.append((posicao[0], posicao[1] + 1))
+        return(adjacente)
+
+    def energia_apos_passos(self, matriz: list, passos: int) -> list:
+        piscadas_total = 0
+        for i in range(passos):
+            matriz, piscadas = self.soma_um_na_matriz(matriz).values()
+            piscadas_total += piscadas
+        return {"matriz": matriz, "piscados": piscadas_total}
+
+    def encontra_sincronismo(self, matriz: list):
+        passo = 0
+        sincronismo = 1
+        while sincronismo != 0:
+            matriz, piscadas = self.soma_um_na_matriz(matriz).values()
+            sincronismo = sum([num for elem in matriz for num in elem])
+            passo += 1
+        return passo
+
+        
+
+            
+
+
+"""
+matriz = [[1,12,3],[1,2,3],[1,2,3]]
+flat = [num for elem in matriz for num in elem]
+
+matriz2 = [[0 if item > 10 else item for item in linha] for linha in matriz]
+
+print(matriz2)
+"""
+
+"""
+
+a = [
+    "5483143223",
+    "2745854711",
+    "5264556173",
+    "6141336146",
+    "6357385478",
+    "4167524645",
+    "2176841721",
+    "6882881134",
+    "4846848554",
+    "5283751526"
+]
+print(a)
+b = [[int(a[linha][coluna]) for coluna in range(len(a[linha]))] for linha in range(len(a))]
+print(b)
+
+"""
