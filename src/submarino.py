@@ -647,7 +647,6 @@ class Submarino(object):
     def gera_matriz(self, lista_de_linhas:list) -> list:
         return [[int(lista_de_linhas[linha][coluna]) for coluna in range(len(lista_de_linhas[linha]))] for linha in range(len(lista_de_linhas))]
 
-
     def soma_um_na_matriz(self, matriz: list) -> list:
         matriz = [[item + 1 for item in linha] for linha in matriz]
         matriz = self.resolve_piscada_polvo(matriz, [])
@@ -722,36 +721,58 @@ class Submarino(object):
             passo += 1
         return passo
 
+    def gera_passagem(self, passagens_raw: list) -> list:
+        passagem = []
+        while passagens_raw:
+            passagem.append(passagens_raw.pop(0).split("-"))
+        return passagem
+    
+    def gera_vizinhos(self, passagem: list) -> dict:
+        dicionario = {}
+        for caverna in {x for item in passagem for x in item}:
+            dicionario[f"{caverna}"] = []
+            for vizinho in passagem:
+                if caverna in vizinho:
+                    dicionario[f"{caverna}"].append(vizinho)
+        return dicionario
+    
+    def encontrar_caminhos(self, vizinhos: dict) -> list:
+        caminhos = ["start"]
+        for vizinho in vizinhos["start"].values():
+            self.visitar_vizinho(vizinhos, vizinho, ["start"])
         
+    
+    def visitar_vizinho(self, vizinhos:dict, caverna_atual: str, ja_visitado: list = [], caminho: list = []):
+        resposta = []
+        caminho_atual = caminho
+        print("************Inicio****************")
+        caminho.append(caverna_atual)
+        print("Caverna_Atual: ", caverna_atual)
+        print("Proximas cavernas ",vizinhos[f"{caverna_atual}"])
+        if caverna_atual in ["start", "end"]:
+            ja_visitado.append(caverna_atual)
+        elif not caverna_atual.isupper():
+            ja_visitado.append(caverna_atual)
+        
+        print("cavernas Ja visistadas: ", ja_visitado)
+        for proxima_caverna in vizinhos[f"{caverna_atual}"]:
+            print("caminho*", caminho_atual)
+            print("proxima caverna ", proxima_caverna)
+            if proxima_caverna == "end":
+                caminho.append(proxima_caverna)
+                
+                print("***********************end*******************")
+                return caminho
+            if proxima_caverna not in ja_visitado:
+                resposta.append(self.visitar_vizinho(vizinhos, proxima_caverna, ja_visitado, caminho))
+                print("resposta", resposta)
+                
+        print(resposta)
+        
+
 
             
 
 
-"""
-matriz = [[1,12,3],[1,2,3],[1,2,3]]
-flat = [num for elem in matriz for num in elem]
 
-matriz2 = [[0 if item > 10 else item for item in linha] for linha in matriz]
 
-print(matriz2)
-"""
-
-"""
-
-a = [
-    "5483143223",
-    "2745854711",
-    "5264556173",
-    "6141336146",
-    "6357385478",
-    "4167524645",
-    "2176841721",
-    "6882881134",
-    "4846848554",
-    "5283751526"
-]
-print(a)
-b = [[int(a[linha][coluna]) for coluna in range(len(a[linha]))] for linha in range(len(a))]
-print(b)
-
-"""

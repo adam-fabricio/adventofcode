@@ -687,7 +687,6 @@ def test_quando_receber_um_dicionario_deve_decodificar_a_saida():
     
     assert valor_final == 26
 
-
 def test_quando_passar_uma_lista_de_entrada_deve_retornar_dicionario():
     submarino = Submarino()
     lista_de_sinais = "acedgfb cdfbe gcdfa fbcad dab cefabd cdfgeb eafb cagedb ab | cdfeb fcadb cdfeb cdbaf"
@@ -729,7 +728,6 @@ def test_quando_passar_a_lista_de_codigo_deve_retornar_a_soma_da_saida():
     resultado = submarino.soma_das_saidas(lista_de_sinais)
 
     assert resultado == 61229
-
 
 def test_quando_ler_arquivo_deve_retornar_uma_lista_mapa_de_altura():
     submarino = Submarino()
@@ -808,7 +806,6 @@ def test_quando_passar_um_ponto_deve_retornar_tamanho_da_bacia():
 
     assert resultado == 3
 
-
 def test_quando_receber_uma_lista_de_cordenadas_deve_retornar_uma_lista_de_tamanho_das_bacias():
     submarino = Submarino()
     caminho = "assets/mapa_altura_raw_teste.txt"
@@ -830,7 +827,6 @@ def test_quando_receber_uma_lista_de_tamanho_de_bacia_deve_retornar_os_3_maiores
     
     assert tres_maiores_bacias == [9, 9, 14]
 
-
 def test_quando_ler_uma_linha_do_subsistema_deve_retornar_o_caracter_com_erro_ou_vazio():
     submarino = Submarino()
     caminho = "assets/subsistema_de_navegacao_teste.txt"
@@ -848,7 +844,6 @@ def test_quando_ler_subsistema_de_navegacao_deve_retornar_lista_de_erros():
     lista_de_erros = submarino.verifica_corrupcao_arquivo(subsitema_de_navegacao)
 
     assert lista_de_erros == ["}", ")", "]", ")", ">"]
-
 
 def test_quando_ler_lista_de_erros_deve_retornar_lista_de_pontos():
     submarino = Submarino()
@@ -872,7 +867,6 @@ def test_quando_passar_lista_deve_remover_as_linhas_com_erros():
 
     assert lista_de_erros == []
 
-
 def test_quando_passar_uma_lista_incompleta_deve_retornar_lista_de_caracter_para_fechar():
     submarino = Submarino()
     caminho = "assets/subsistema_de_navegacao_teste.txt"
@@ -883,7 +877,6 @@ def test_quando_passar_uma_lista_incompleta_deve_retornar_lista_de_caracter_para
     
     converte_para_fechado = submarino.inverte_lista_caracter(lista_abertos)
     assert converte_para_fechado[::-1] == ["}", "}", "]", "]", ")", "}", ")", "]"]
-
 
 def test_quando_passar_uma_lista_de_caracter_faltante_deve_calcular_pontos2():
     submarino = Submarino()
@@ -939,7 +932,6 @@ def test_quando_passar_dia_deve_somar_um_de_energia_lista_de_inteiros():
 
     assert energia_polvo_proximo_dia["matriz"] == energia_polvo_resultado
 
-
 def test_quando_energia_passar_10_deve_somar_1_adjacentes():
     submarino = Submarino()
     energia_raw =           [
@@ -973,7 +965,6 @@ def test_quando_energia_passar_10_deve_somar_1_adjacentes():
 
     assert energia["matriz"] == energia_resultado
     assert energia["piscados"] == 35
-
 
 def test_quando_energia_passar_100_passos_deve_retornar():
     submarino = Submarino()
@@ -1023,4 +1014,72 @@ def test_quando_passar_a_lista_deve_encontrar_quando_os_polvos_vao_estar_sincron
 
     assert passo == 195
 
+def test_quando_passar_uma_lista_de_caminho_gerar_uma_lista_splitada():
+    submarino = Submarino()
+    passagens_raw = submarino.le_arquivo("assets/passagem_mapa_teste.txt")
 
+    passagem = submarino.gera_passagem(passagens_raw)
+
+    assert passagem ==  [["start", "A"], ["start", "b"], ["A", "c"], ["A", "b"], ["b", "d"], ["A", "end"], ["b", "end"]]
+
+def test_quando_passar_a_lista_de_valores_deve_retornar_um_dicionario_de_vizinhos():
+    submarino = Submarino()
+    passagem = [["start", "A"], ["start", "b"], ["A", "c"], ["A", "b"], ["b", "d"], ["A", "end"], ["b", "end"]]
+    vizinhos_resultado =    {
+                                "start": ["A", "b"],
+                                "A": ["start", "end", "b", "c"],
+                                "b": ["start", "end", "A", "d"],
+                                "c": ["A"],
+                                "d": ["b"],
+                                "end": ["A", "b"]
+                            }
+    
+    vizinho = submarino.gera_vizinhos(passagem)
+
+    assert list(vizinho.keys()).sort() == list(vizinhos_resultado.keys()).sort()
+    assert list(vizinho.values()).sort() == list(vizinhos_resultado.values()).sort()
+
+def test_quando_passar_um_caverna_deve_visitar_vizinho_ate_chegar_end():
+    submarino = Submarino()
+    vizinhos =              {
+                                "start": ["A", "b"],
+                                "A": ["start", "end", "b", "c"],
+                                "b": ["start", "end", "A", "d"],
+                                "c": ["A"],
+                                "d": ["b"],
+                                "end": ["A", "b"]
+                            }
+    
+    visitado = submarino.visitar_vizinho(vizinhos, "start")
+
+    assert visitado == ["end", "b", "c"]
+
+
+@skip
+def test_quando_passar_dict_de_vizinhos_achar_lista_de_caminho():
+
+    submarino = Submarino()
+    vizinhos =              {
+                                "start": ["A", "b"],
+                                "A": ["start", "end", "b", "c"],
+                                "b": ["start", "end", "A", "d"],
+                                "c": ["A"],
+                                "d": ["b"],
+                                "end": ["A", "b"]
+                            }
+    caminhos_result =   [
+                            ["start","A","b","A","c",'A',"end"],
+                            ['start','A','b','A','end'],
+                            ['start','A','b','end'],
+                            ['start','A','c','A','b','A','end'],
+                            ['start','A','c','A','b','end'],
+                            ['start','A','c','A','end'],
+                            ['start','A','end'],
+                            ['start','b','A','c','A','end'],
+                            ['start','b','A','end'],
+                            ['start','b','end'],
+                        ]
+
+    cominhos = submarnio.encontrar_caminhos(vizinhos)
+
+    assert caminhos == caminhos_result
