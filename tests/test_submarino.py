@@ -1039,23 +1039,6 @@ def test_quando_passar_a_lista_de_valores_deve_retornar_um_dicionario_de_vizinho
     assert list(vizinho.keys()).sort() == list(vizinhos_resultado.keys()).sort()
     assert list(vizinho.values()).sort() == list(vizinhos_resultado.values()).sort()
 
-def test_quando_passar_um_caverna_deve_visitar_vizinho_ate_chegar_end():
-    submarino = Submarino()
-    vizinhos =              {
-                                "start": ["A", "b"],
-                                "A": ["start", "end", "b", "c"],
-                                "b": ["start", "end", "A", "d"],
-                                "c": ["A"],
-                                "d": ["b"],
-                                "end": ["A", "b"]
-                            }
-    
-    visitado = submarino.visitar_vizinho(vizinhos, "start")
-
-    assert visitado == ["end", "b", "c"]
-
-
-@skip
 def test_quando_passar_dict_de_vizinhos_achar_lista_de_caminho():
 
     submarino = Submarino()
@@ -1080,6 +1063,34 @@ def test_quando_passar_dict_de_vizinhos_achar_lista_de_caminho():
                             ['start','b','end'],
                         ]
 
-    cominhos = submarnio.encontrar_caminhos(vizinhos)
+    caminhos = submarino.encontrar_caminhos(vizinhos)
 
-    assert caminhos == caminhos_result
+    assert len(caminhos) == len(caminhos_result)
+    assert all([a==b for a, b in zip(sorted(caminhos), sorted(caminhos_result))])
+
+def test_quando_passar_o_mapa_2_deve_contar_19_caminhos():
+    submarino = Submarino()
+    passagens_raw = submarino.le_arquivo("assets/passagem_mapa_teste_2.txt")
+    passagem = submarino.gera_passagem(passagens_raw)
+    passagens_dict = submarino.gera_vizinhos(passagem)
+    caminhos = submarino.encontrar_caminhos(passagens_dict)
+
+    assert len(caminhos) == 19
+
+def test_quando_passar_o_mapa_3_deve_contar_226_caminhos():
+    submarino = Submarino()
+    passagens_raw = submarino.le_arquivo("assets/passagem_mapa_teste_3.txt")
+    passagem = submarino.gera_passagem(passagens_raw)
+    passagens_dict = submarino.gera_vizinhos(passagem)
+    caminhos = submarino.encontrar_caminhos(passagens_dict)
+
+    assert len(caminhos) == 226
+
+def test_quando_passar_o_mapa_1_deve_contar_36_caminhos():
+    submarino = Submarino()
+    passagens_raw = submarino.le_arquivo("assets/passagem_mapa_teste.txt")
+    passagem = submarino.gera_passagem(passagens_raw)
+    passagens_dict = submarino.gera_vizinhos(passagem)
+    caminhos = submarino.encontrar_caminhos_2(passagens_dict)
+    [print(i) for i in sorted(caminhos)]
+    assert len(caminhos) == 36

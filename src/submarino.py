@@ -723,56 +723,66 @@ class Submarino(object):
 
     def gera_passagem(self, passagens_raw: list) -> list:
         passagem = []
-        while passagens_raw:
-            passagem.append(passagens_raw.pop(0).split("-"))
+        for item in passagens_raw:
+            passagem.append(item.split("-"))
         return passagem
     
     def gera_vizinhos(self, passagem: list) -> dict:
-        dicionario = {}
-        for caverna in {x for item in passagem for x in item}:
-            dicionario[f"{caverna}"] = []
-            for vizinho in passagem:
-                if caverna in vizinho:
-                    dicionario[f"{caverna}"].append(vizinho)
+        dicionario = { caverna: [] for cavernas in passagem for caverna in cavernas }
+        for vizinho in passagem:
+            dicionario[vizinho[0]].append(vizinho[1])
+            dicionario[vizinho[1]].append(vizinho[0])
         return dicionario
     
-    def encontrar_caminhos(self, vizinhos: dict) -> list:
-        caminhos = ["start"]
-        for vizinho in vizinhos["start"].values():
-            self.visitar_vizinho(vizinhos, vizinho, ["start"])
-        
-    
-    def visitar_vizinho(self, vizinhos:dict, caverna_atual: str, ja_visitado: list = [], caminho: list = []):
-        resposta = []
-        caminho_atual = caminho
-        print("************Inicio****************")
-        caminho.append(caverna_atual)
-        print("Caverna_Atual: ", caverna_atual)
-        print("Proximas cavernas ",vizinhos[f"{caverna_atual}"])
-        if caverna_atual in ["start", "end"]:
-            ja_visitado.append(caverna_atual)
-        elif not caverna_atual.isupper():
-            ja_visitado.append(caverna_atual)
-        
-        print("cavernas Ja visistadas: ", ja_visitado)
-        for proxima_caverna in vizinhos[f"{caverna_atual}"]:
-            print("caminho*", caminho_atual)
-            print("proxima caverna ", proxima_caverna)
-            if proxima_caverna == "end":
-                caminho.append(proxima_caverna)
-                
-                print("***********************end*******************")
-                return caminho
-            if proxima_caverna not in ja_visitado:
-                resposta.append(self.visitar_vizinho(vizinhos, proxima_caverna, ja_visitado, caminho))
-                print("resposta", resposta)
-                
-        print(resposta)
-        
+    def encontrar_caminhos(self, vizinhos: dict ) -> list:
+        """ Cria uma lista de caminho até o end."""
+        self.vizinhos = vizinhos
+        self.caminhos = []
+        self.busca_por_profundidade("start")
+
+        return self.caminhos
+
+    def busca_por_profundidade(self, posicao: str, caminho: list = [], \
+            visitados: set = set() ):
+        """ Busca por profindidade. """
+        caminho.append(posicao)
+        if posicao.islower() and not posicao == "end":
+            visitados.add(posicao)
+        if posicao == "end":
+            self.caminhos.append(caminho)
+            return
+
+        for proxima_posicao in self.vizinhos[posicao]:
+            if proxima_posicao in visitados:
+                continue
+            self.busca_por_profundidade(proxima_posicao, caminho.copy(), visitados.copy() )
+
+    def busca_por_profundidade_2(self, posicao: str, \
+            caminho: list = [], \
+            visitados: set = { "start" }, \
+            visitados_2: set = { "start" } ) -> None:
+        """ Busca por profindidade. """
+        caminho.append(posicao)
+        if posicao.islower() and not posicao == "end":
+            if posicao in visitados:
+                visitados_2.add(posicao)
+            else:
+                visitados.add(posicao)
+        if posicao == "end":
+            self.caminhos.append(caminho)
+            return
+
+        for proxima_posicao in self.vizinhos[posicao]:
+            if proxima_posicao in visitados_2:
+                continue
+            self.busca_por_profundidade_2(proxima_posicao, caminho.copy(), \
+                    visitados.copy(), visitados_2.copy() )
 
 
-            
+    def encontrar_caminhos_2(self, vizinhos: dict ) -> list:
+        """ Cria uma lista de caminho até o end."""
+        self.vizinhos = vizinhos
+        self.caminhos = []
+        self.busca_por_profundidade_2("start")
 
-
-
-
+        return self.caminhos
