@@ -773,8 +773,11 @@ class Submarino(object):
             return
 
         for proxima_posicao in self.vizinhos[posicao]:
-            if proxima_posicao in visitados_2:
-                continue
+            if proxima_posicao.islower():
+                if proxima_posicao in visitados_2:
+                    continue
+                elif proxima_posicao in visitados and len(visitados_2) == 2:
+                    continue
             self.busca_por_profundidade_2(proxima_posicao, caminho.copy(), \
                     visitados.copy(), visitados_2.copy() )
 

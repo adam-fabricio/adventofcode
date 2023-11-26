@@ -276,3 +276,17 @@ if __name__ == "__main__":
     caminhos = submarino.encontrar_caminhos(passagens_dict)
 
     print(f"O número de caminhos pelo sistema de caverna {len(caminhos)}")
+
+
+    print()
+    print("*" * estrela2)
+    print("*" * estrela1, "Dia 12 - Parte 2.", "*" * estrela1)
+    print("*" * estrela2)
+    print()
+
+    passagem_raw = submarino.le_arquivo("assets/passagem_mapa.txt")
+    passagem = submarino.gera_passagem(passagem_raw)
+    passagens_dict = submarino.gera_vizinhos(passagem)
+    caminhos = submarino.encontrar_caminhos_2(passagens_dict)
+
+    print(f"O número de caminhos pelo sistema de caverna {len(caminhos)}")

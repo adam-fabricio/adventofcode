@@ -1094,3 +1094,24 @@ def test_quando_passar_o_mapa_1_deve_contar_36_caminhos():
     caminhos = submarino.encontrar_caminhos_2(passagens_dict)
     [print(i) for i in sorted(caminhos)]
     assert len(caminhos) == 36
+
+def test_quando_passar_o_mapa_2_deve_contar_103_caminhos():
+    submarino = Submarino()
+    passagens_raw = submarino.le_arquivo("assets/passagem_mapa_teste_2.txt")
+    passagem = submarino.gera_passagem(passagens_raw)
+    passagens_dict = submarino.gera_vizinhos(passagem)
+    caminhos = submarino.encontrar_caminhos_2(passagens_dict)
+    [print(i) for i in sorted(caminhos)]
+    assert len(caminhos) == 103
+
+
+def test_quando_passar_o_mapa_3_deve_contar_3509_caminhos():
+    submarino = Submarino()
+    passagens_raw = submarino.le_arquivo("assets/passagem_mapa_teste_3.txt")
+    passagem = submarino.gera_passagem(passagens_raw)
+    passagens_dict = submarino.gera_vizinhos(passagem)
+    caminhos = submarino.encontrar_caminhos_2(passagens_dict)
+    [print(i) for i in sorted(caminhos)]
+    assert len(caminhos) == 3509
+
+
