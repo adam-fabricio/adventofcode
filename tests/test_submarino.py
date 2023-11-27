@@ -1115,3 +1115,57 @@ def test_quando_passar_o_mapa_3_deve_contar_3509_caminhos():
     assert len(caminhos) == 3509
 
 
+def test_quando_abrir_um_arquivo_regtorne_a_string():
+    submarino = Submarino()
+    manual = submarino.abre_arquivo("manual_teste.txt")
+
+    assert type(manual) == str
+
+def test_quando_separar_manual_criar_uma_lista_de_informacao_instrucao():
+    submarino = Submarino()
+    manual = submarino.abre_arquivo("manual_teste.txt")
+    list_manual = submarino.separa_manual(manual)
+
+    assert type(list_manual) == list
+
+
+def test_quando_tratar_informcao_retorne_uma_lista_de_cordenadas():
+    submarino = Submarino()
+    manual = submarino.abre_arquivo("manual_teste.txt")
+    list_manual = submarino.separa_manual(manual)
+    informacao = submarino.trata_informacao(list_manual)
+
+    assert type(informacao) == list
+
+def test_quando_trata_informacao_trazer_as_cordenadas_corretamente():
+    submarino = Submarino()
+    manual = submarino.abre_arquivo("manual_teste.txt")
+    list_manual = submarino.separa_manual(manual)
+
+    informacao = submarino.trata_informacao(list_manual)
+    cordenadas_teste = [
+            [6,10],
+            [0,14],
+            [9,10],
+            [0,3],
+            [10,4],
+            [4,11],
+            [6,0],
+            [6,12],
+            [4,1],
+            [0,13],
+            [10,12],
+            [3,4],
+            [3,0],
+            [8,4],
+            [1,10],
+            [2,14],
+            [8,10],
+            [9,0]
+            ]
+
+    print(informacao)
+    print(cordenadas_teste)
+
+    assert all( a == b for a, b in zip(sorted(informacao), sorted(cordenadas_teste) ) )
+

@@ -1,7 +1,9 @@
 """Advent of Code 2021 do site 'https://adventofcode.com/'."""
 
 
-    
+import os
+
+
 class Bingo():
 
     def __init__(self):
@@ -789,3 +791,19 @@ class Submarino(object):
         self.busca_por_profundidade_2("start")
 
         return self.caminhos
+
+
+    def abre_arquivo(self, nome_arquivo: str) -> str:
+        with open(os.path.join("assets", nome_arquivo), 'r') as arquivo:
+            arquivo = arquivo.read()
+        return arquivo
+
+
+    def separa_manual(self, manual:str ) -> list:
+        return manual.split('\n\n')
+
+
+    def trata_informacao(self, list_manual: list) -> list:
+        return [ list(map(int, cordenadas.split(',')))
+                for cordenadas in list_manual[0].splitlines() ]
+
