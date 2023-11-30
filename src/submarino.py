@@ -803,7 +803,41 @@ class Submarino(object):
         return manual.split('\n\n')
 
 
-    def trata_informacao(self, list_manual: list) -> list:
-        return [ list(map(int, cordenadas.split(',')))
-                for cordenadas in list_manual[0].splitlines() ]
+    def trata_informacao(self, list_manual: list) -> set:
+        return { cordenadas  for cordenadas in list_manual[0].splitlines() }
+
+    def trata_instrucao(self, list_manual: list) -> list:
+        return [ [instrucao.split()[2][0], int(instrucao.split("=")[1])] for instrucao in list_manual[1].splitlines() ]
+
+    def dobra_folha(self, informacao: set, instrucao: list) -> set:
+        eixo, indice = instrucao
+        if eixo == "y":
+            ref = 1
+
+        else:
+            ref = 0
+        remove_item = []
+        add_item = []
+        for cordenadas in informacao:
+            cordenada = cordenadas.split(",")
+            if int(cordenada[ref]) > indice:
+                cordenada[ref] = str(2 * indice - int(cordenada[ref]))
+                remove_item.append(cordenadas)
+                add_item.append(",".join(cordenada))
+
+        for item in remove_item:
+            informacao.remove(item)
+
+        informacao.update(add_item)
+
+        return informacao
+
+    def print_manual(self, informacao: set) -> None:
+        for linha in range(8):
+            for coluna in range(50):
+                if ",".join(map(str, [coluna, linha])) in informacao:
+                    print("#", end='')
+                else:
+                    print(".", end='')
+            print()
 

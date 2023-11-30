@@ -1135,7 +1135,7 @@ def test_quando_tratar_informcao_retorne_uma_lista_de_cordenadas():
     list_manual = submarino.separa_manual(manual)
     informacao = submarino.trata_informacao(list_manual)
 
-    assert type(informacao) == list
+    assert type(informacao) == set
 
 def test_quando_trata_informacao_trazer_as_cordenadas_corretamente():
     submarino = Submarino()
@@ -1143,29 +1143,54 @@ def test_quando_trata_informacao_trazer_as_cordenadas_corretamente():
     list_manual = submarino.separa_manual(manual)
 
     informacao = submarino.trata_informacao(list_manual)
-    cordenadas_teste = [
-            [6,10],
-            [0,14],
-            [9,10],
-            [0,3],
-            [10,4],
-            [4,11],
-            [6,0],
-            [6,12],
-            [4,1],
-            [0,13],
-            [10,12],
-            [3,4],
-            [3,0],
-            [8,4],
-            [1,10],
-            [2,14],
-            [8,10],
-            [9,0]
-            ]
+    cordenadas_teste = {
+            "6,10",
+            "0,14",
+            "9,10",
+            "0,3",
+            "10,4",
+            "4,11",
+            "6,0",
+            "6,12",
+            "4,1",
+            "0,13",
+            "10,12",
+            "3,4",
+            "3,0",
+            "8,4",
+            "1,10",
+            "2,14",
+            "8,10",
+            "9,0"
+            }
 
     print(informacao)
     print(cordenadas_teste)
 
     assert all( a == b for a, b in zip(sorted(informacao), sorted(cordenadas_teste) ) )
 
+def test_quando_tratar_instrucao_deve_retornar_uma_lista_de_instrucao():
+    submarino = Submarino()
+    manual = submarino.abre_arquivo("manual_teste.txt")
+    list_manual = submarino.separa_manual(manual)
+
+    instrucao = submarino.trata_instrucao(list_manual)
+    instrucao_test = [["y", 7], ["x", 5]]
+
+    assert all( a == b for a, b in zip(sorted(instrucao), sorted(instrucao_test)))
+
+def test_quando_dobrar_as_folhas_verificar_os_pontos_que_sobram():
+
+    submarino = Submarino()
+    manual = submarino.abre_arquivo("manual_teste.txt")
+    list_manual = submarino.separa_manual(manual)
+    instrucao = submarino.trata_instrucao(list_manual)
+    informacao = submarino.trata_informacao(list_manual)
+
+    informacao = submarino.dobra_folha(informacao, instrucao[0])
+
+    assert len(informacao) == 17
+
+    informacao = submarino.dobra_folha(informacao, instrucao[1])
+
+    assert len(informacao) == 16

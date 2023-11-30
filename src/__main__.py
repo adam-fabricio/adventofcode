@@ -290,3 +290,32 @@ if __name__ == "__main__":
     caminhos = submarino.encontrar_caminhos_2(passagens_dict)
 
     print(f"O número de caminhos pelo sistema de caverna {len(caminhos)}")
+
+
+    print()
+    print("*" * estrela2)
+    print("*" * estrela1, "Dia 13 - Parte 1.", "*" * estrela1)
+    print("*" * estrela2)
+    print()
+
+    manual = submarino.abre_arquivo("manual.txt")
+    list_manual = submarino.separa_manual(manual)
+    instrucao = submarino.trata_instrucao(list_manual)
+    informacao = submarino.trata_informacao(list_manual)
+
+    informacao = submarino.dobra_folha(informacao, instrucao[0])
+
+    print(f'O número de pontos visiveis depois da primeira dobra é \
+{len(informacao)}')
+
+    print()
+    print("*" * estrela2)
+    print("*" * estrela1, "Dia 13 - Parte 2.", "*" * estrela1)
+    print("*" * estrela2)
+    print()
+
+    for acao in instrucao:
+        informacao = submarino.dobra_folha(informacao, acao)
+
+    submarino.print_manual(informacao)
+
