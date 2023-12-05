@@ -47,16 +47,8 @@ range_seeds = [ [seeds[a], seeds[a] + seeds[a+1] - 1] for a in range(0, len(seed
 
 range_seeds.sort(key=lambda x: x[0])
 
-print('='*80)
-
-for seed in range_seeds:
-    print(seed)
 
 convert = [ range_seeds ]
-
-print('='*80)
-for t in tabela[0]:
-    print(t)
 
 for t, tab in enumerate(tabela):
     conv_aux = []
@@ -64,7 +56,6 @@ for t, tab in enumerate(tabela):
         c = 0
         x_min, x_max = item
         for orig, dest, size in tab:
-            #print(f"xmin: {x_min}, x_max: {x_max}, {orig}, {orig + size}")
             if c:
                 continue
 
@@ -88,14 +79,10 @@ for t, tab in enumerate(tabela):
             if x_max >= orig + size:
                 conv_aux.append( [x_min - orig +  dest, dest + size - 1 ] )
                 x_min = orig + size
-                print(x_min)
         if not c:
             conv_aux.append( [ x_min, x_max ] )
     convert.append( sorted(conv_aux, key=lambda x: x[0] ))
     if t == 12:
         break
 
-for n, c in enumerate(convert):
-    print('='*80)
-    print(n, c)
-    print('='*80)
+print(f'parte 2: {convert[-1][0][0]}')
