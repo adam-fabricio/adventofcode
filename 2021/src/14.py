@@ -3,7 +3,7 @@
 import os
 
 
-nome_arquivo = "24.in"
+nome_arquivo = "14.in"
 local = "assets"
 part = "1"
 
