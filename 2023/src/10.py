@@ -77,3 +77,4 @@ def bfs(mapa:dict, local: tuple, visitados:set = set()) -> int:
 
 print( (bfs(mapa, start) + 1) /2 )
 #6968
+# ulimit -s 100000000
