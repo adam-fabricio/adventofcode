@@ -5,7 +5,7 @@ import os
 import re
 
 
-test = 1
+test = 0
 part = "1"
 dia = "11"
 
@@ -56,21 +56,18 @@ for i, l, c in galaxy:
         sum_galaxy.add( (ii, i) )
         distance.append( abs(l - ll) + abs(c - cc) )
 
-print(sum(distance))
+print("Parte 1:",sum(distance))
 
 
 i = 1
 galaxy = []
-for l, lin in enumerate(arquivo):
-    for c, col in enumerate(arquivo[l]):
+for l, lin in enumerate(arquivo_2):
+    for c, col in enumerate(arquivo_2[l]):
         if col == "#":
             galaxy.append( (i, l, c) )
             i += 1
-print(galaxy)
-print("lin:", add_lin, ", col:", add_col)
 
-fator_l = 1
-fator_c = 1
+fator_c = 10**6 - 1
 distance = []
 sum_galaxy = set()
 for i, l, c in galaxy:
@@ -82,18 +79,17 @@ for i, l, c in galaxy:
         fator = 0
         for exp_lin in add_lin:
             if l < exp_lin and ll > exp_lin:
-                fator += fator_l
+                fator += fator_c
             elif ll < exp_lin and l > exp_lin:
-                fator += fator_l
+                fator += fator_c
         for exp_col in add_col:
             if c < exp_col and cc > exp_col:
                 fator += fator_c
             elif cc < exp_col and c > exp_col:
                 fator += fator_c
         d = abs(l - ll) + abs(c - cc) + fator
-        print(i, ",", ii, ",", d, ",", fator_l,",", fator_c, ",",fator)
         distance.append( abs(l - ll) + abs(c - cc) + fator )
 
 
-print(sum(distance))
+print("Parte 2:", sum(distance))
 
