@@ -6,11 +6,31 @@ import re
 import sys
 import subprocess
 
-test = 0
+
+def print_map() -> None:
+    for l, line in enumerate(arquivo):
+        for c, col in enumerate(arquivo[l]):
+            if (l, c) in visitados:
+                print("\033[0;32;40m", end="")
+                print(col, end="")
+                print("\033[0m", end="")
+            elif (l, c) in inner:
+                print("\033[0;31;40m", end="")
+                print("I", end="")
+                print("\033[0m", end="")
+
+
+            else:
+                print(col, end='')
+        print()
+
+
+test = 1
 part = "1"
 dia = "10"
 
 sys.setrecursionlimit(10**6)
+#  ulimit -s 100000000
 
 if test:
     dia = dia + "_test"
@@ -21,7 +41,12 @@ with open(path) as f:
     arquivo = f.read().splitlines()
 
 dot = set()
+inner = set()
+visitados = set()
 mapa = {}
+out = set()
+
+
 for l, lines in enumerate(arquivo):
     for c, col in enumerate(lines):
         if col == ".":
@@ -56,18 +81,11 @@ for l, lines in enumerate(arquivo):
             elif j == -1 and arquivo[i+l][j+c] in "|J7":
                 continue
             elif j == 1 and arquivo[i+l][j+c] in "|FL":
-                #print(l,c, arquivo[i+l][j+c])
                 continue
             mapa[(l, c)].append( (i+l, j+c) )
 
 
-for k in mapa.keys():
-    #print(k, "->", mapa[k])
-    pass
-print(start)
-print("="*80)
 
-visitados = set()
 
 def dfs(mapa:dict, local: tuple) -> int:
     visitados.add( local )
@@ -75,12 +93,27 @@ def dfs(mapa:dict, local: tuple) -> int:
     for vizinho in mapa[local]:
         if vizinho in visitados:
             continue
+        print_map()
+        print("="*80)
+        input()
         return dfs(mapa, vizinho) + 1
     return 1
 
-print( ( dfs(mapa, start) ) /2 )
-inner = set()
-out = set()
+print("Parte 1:", ( dfs(mapa, start) ) /2 )
+print("="*80)
+
+for i, lin in enumerate(arquivo):
+    count = 0
+    for c, col in enumerate(arquivo[l]):
+        if (l,c) in visitados and col in "LJF7|":
+            count += 1
+        elif col == '.' and count % 2 == 1:
+            inner.add( (l, c) )
+
+
+print_map()
+
+exit()
 for d in dot:
     l, c = d
     if l == 0 or c == 0 or c==(len(arquivo[0])-1) or l == (len(arquivo)-1):
@@ -136,5 +169,3 @@ for l, lines in enumerate(arquivo):
             print(col, end ="")
     print()
 
-#  6968
-#  ulimit -s 100000000
