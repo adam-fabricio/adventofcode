@@ -25,7 +25,7 @@ def print_map() -> None:
         print()
 
 
-test = 1
+test = 0
 part = "1"
 dia = "10"
 
@@ -93,79 +93,46 @@ def dfs(mapa:dict, local: tuple) -> int:
     for vizinho in mapa[local]:
         if vizinho in visitados:
             continue
-        print_map()
-        print("="*80)
-        input()
+        #print_map()
+        #print("="*80)
+        #input()
         return dfs(mapa, vizinho) + 1
     return 1
 
 print("Parte 1:", ( dfs(mapa, start) ) /2 )
 print("="*80)
 
-for i, lin in enumerate(arquivo):
+for l, lin in enumerate(arquivo):
+    aux = ""
     count = 0
     for c, col in enumerate(arquivo[l]):
-        if (l,c) in visitados and col in "LJF7|":
-            count += 1
-        elif col == '.' and count % 2 == 1:
-            inner.add( (l, c) )
-
-
-print_map()
-
-exit()
-for d in dot:
-    l, c = d
-    if l == 0 or c == 0 or c==(len(arquivo[0])-1) or l == (len(arquivo)-1):
-        out.add( (l, c) )
-        continue
-    for direcoes in [ (0,1), (1,0), (0,-1), (-1,0) ]:
-        dl, dc = direcoes
-        ll = l + dl
-        cc = c + dc
-        convert = 0
-        while True:
-            if (ll, cc) in out:
-                out.add( (l, c) )
-                convert = 1
-                break
-            elif (ll == 0 or cc == 0 or cc==(len(arquivo[0])-1)
-                  or ll == (len(arquivo)-1)):
-                out.add( (l, c) )
-                convert = 1
-                break
-            elif (ll, cc) in visitados:
-                inner.add( (l, c) )
-                convert = 1
-                break
-            ll += dl
-            cc += dc
-        if convert:
-            continue
-
-
-
-
-for l, lines in enumerate(arquivo):
-    for c, col in enumerate(lines):
-        if (l, c)  in visitados:
-            print("\033[0;32;40m", end="")
-            print(col, end="")
-            print("\033[0m", end="")
-        elif (l, c) in out:
-            print("\033[0;34;31m", end="")
-            print("O", end="")
-            print("\033[0m", end="")
-        elif (l, c) in inner:
-            print("\033[0;32;35m", end="")
-            print("I", end="")
-            print("\033[0m", end="")
-        elif (l, c) in dot:
-            print("\033[0;33;31m", end="")
-            print(col, end="")
-            print("\033[0m", end="")
-
+        if (l,c) in visitados:
+            if col == "S":
+                col = "F"
+            if col in "|":
+                count += 1
+            elif col in "FL":
+                aux = col
+            elif aux == "F" and col == "J":
+                count += 1
+                aux = ""
+            elif aux == "L" and col == "7":
+                count += 1
+                aux = ""
         else:
-            print(col, end ="")
-    print()
+            if count % 2 == 1:
+                inner.add( (l, c) )
+        #input( f'({l},{c})col: {col} count: {count} aux: {aux}' )
+
+print("Parte 2:", len(inner))
+
+dl = []
+dc = []
+for l, c in mapa[start]:
+    dl.append(l - start[0])
+    dc.append(c - start[1])
+
+print(dl, dc)
+print(start)
+print(mapa[start])
 
