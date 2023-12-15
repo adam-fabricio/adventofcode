@@ -25,7 +25,10 @@
 # 7) Save a in file in ./session.conf
 #
 #-----------------------------------Variable----------------------------------#
-session_address=./session.conf
+
+
+session_address="$(dirname $0)/session.conf"
+
 day=${1:-1}
 year=${2:-2023}
 #---------------------------------Get Input-----------------------------------#
