@@ -1,0 +1,95 @@
+#include <libc.h>
+#include <reu.h>                        // Use RAM Expansion Unit for extra mem.
+enum DIR { D,R,L,U };                   // Four directions we can walk in.
+const DIR LEFT[4] = { R, U, D, L };     // Rotate dir left 90 degrees.
+#define XDIR(d) ((d)==L?-1:(d)==R?1:0)  // Given a direction, returns X delta
+#define YDIR(d) ((d)==U?-1:(d)==D?1:0)  // and Y delta vector, -1/0/+1.
+#define OPEN_IDX(i) ((1ul<<22)|((u24)i \
+                     * sizeof(node)))   // Split REU in two areas: closed|open
+#define S 144                           // S: Stride of the map
+struct node {                           // Open node, represents a yet to be
+  u8 x,y,dir:2,len:4,dummy;             // searched frontier of the A* search.
+  u16 dist, nexth;                      // nexth: Handle to next open node in
+} reu;                                  // REU memory.
+char map[S*144];                        // The input map weights
+u8 w, h, P, visited;                    // Map width x height.P:bucket queue pos
+u16 pq[16], node_alloc = 1;             // Monotone bounded-key bucket queue
+                                        // for A*. The problem instance has
+bool close(node *n, u8 len) {           // bounded-key edge weights 1-9, so 16
+  u24 idx = n->x|((u16)n->y<<8)         // buckets is enough.
+   | ((u24)n->dir<<16) | ((u24)len<<18);
+  u8 bitmask = (1<<(h&7));
+  reucpy(&visited, h>>3, 1, REU2RAM);   // Load closed bit from REU to RAM
+  if ((visited&bitmask)!=0) return true;// Return if we've visited this node.
+  visited   |= bitmask;                 // Otherwise mark this node closed, and
+  reucpy(&visited, h>>3, 1, RAM2REU);   // upload the closed bit to REU, and
+  return false;                         // tell caller this node isn't yet done.
+}
+
+bool close_worse(node *n) {             // Apply the directional optimization:
+  if (close(n, n->len)) return true;    // close off all nodes as visited that
+  if (n->len < 4) return false;         // have more linear steps in their
+  for(u8 i = n->len + 1; i <= 10; ++i)  // history than the current one.
+    if (close(n, i)) return false;
+  return false;
+}
+
+void insert(node n) {                   // Insert node to A* open frontier in
+  u8 i = (n.dist - n.x - n.y)&15;       // monotone bucket queue heap.
+  n.nexth = pq[i];
+  pq[i] = node_alloc++;                 // Increment bump allocator to frontier.
+  if (node_alloc == 0) node_alloc = 1;  // Skip node idx 0 (invalid node index)
+  reucpy(&n, OPEN_IDX(pq[i]),           // memory, and upload the new open node
+          sizeof(node), RAM2REU);       // over to the REU.
+}
+
+node *extract() {                       // Returns and removes the next node
+  while(!pq[P]) P = (P+1)&15;           // in the A* queue.
+  reucpy(&reu, OPEN_IDX(pq[P]),         // Read the open node from REU memory.
+         sizeof(node), REU2RAM);
+  pq[P] = reu.nexth;                    // Remove the node from priority queue.
+  return &reu;                          // And return the removed node.
+}
+
+void walk(node *n,u8 d,u8 l,u8 x,u8 y) {// Queue neighbor node to open frontier.
+  if (!map[y*S+x]) return;              // Can't walk out of map bounds.
+  insert({.x=x, .y=y, .dir=d, .len=l,   // Enqueue the neighbor to A* open set.
+   .dist=(u16)(n->dist + map[y*S+x])}); 
+}
+
+int main() {
+  BENCH();
+  reu_init();
+  for(int i = 0; i < 64; ++i)           // Clear first 4MB of REU memory to init
+    reuset((u24)i << 16, 0, 0);         // the A* closed set.
+
+  char *d = map+S+1;
+  FILE *f = fopen("in17.txt", "r");
+  while(fgets(d, S, f)) ++h, d += S;    // Read input sentineled
+  fclose(f);
+  w = strlen(map+S+1)-1;
+  for(char &c : map) c=(c<'0')?0:c-'0'; // Convert weights from text to binary.
+  insert({.x=1, .y=1, .dir = R});       // Add the initial A* start coordinates.
+  insert({.x=1, .y=1, .dir = D});
+  node *n;
+  for(;;) {                             // A* pathfinding loop
+    n = extract();                      // Get next node in the open frontier.
+    if (!close_worse(n)) {              // Check if it is closed, and close it.
+      if (n->x == w && n->y == h) break;// Are we at the end? If so, finished.
+      i8 X=XDIR(n->dir), Y=YDIR(n->dir);// Convert heading to direction vector
+
+      if (n->len < 10)                  // Ultra-crucible can walk straight for
+        walk(n, n->dir, n->len+1,       // 10 steps.
+             n->x+X, n->y+Y);           // Ultra-crucible can turn only after 4
+
+      if (n->len >= 4) {                // straight walks.
+        SWAP(X, Y); Y = -Y;             // Swap and flip to rotate vec left.
+        u8 d = LEFT[n->dir];            // Rotate dir heading left as well.
+        walk(n,  d, 1,n->x+X, n->y+Y);  // Turn left.
+        walk(n,3-d, 1,n->x-X, n->y-Y);  // Turn right.
+      }
+    }
+  }
+  printf("Heat: %u\n", n->dist);        // Final distance from start to end.
+}
+
