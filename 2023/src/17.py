@@ -8,9 +8,15 @@ from queue import PriorityQueue
 
 
 
-def h(a:tuple) ->int:
-    media = sum (sum(l) for l in grid) / (l_max * c_max)
-    return l_max - a[0] + c_max - a[1]
+def h(a:tuple, custo: int) ->int:
+    return custo - a[0] - a[1]
+
+
+def passo(custo: int, pos: tuple, vetor: tuple, n:int) -> None:
+    #print(pos, vetor, n, custo)
+    if not pos[0] in [l_max, -1] and not pos[1] in [c_max, -1]:
+        fila.put((h(pos, custo), custo+grid[pos[0]][pos[1]], pos, vetor, n))
+    #print(prioridade, custo, pos, vetor, n)
 
 
 test = 0 if len(argv) == 2 else 1
@@ -27,54 +33,69 @@ n=1
 l_max = len(arquivo)
 c_max = len(arquivo[0])
 grid = [[ int(c) for c in linha] for linha in arquivo]
-direcoes = [(0, 1), (1, 0), (0,-1), (-1, 0)]
 inicio = (0, 0)
-vetor = (0, 0)
+vetor = (0, 1)
 final = (l_max-1, c_max-1)
 custo_inicial = 0
-
 visitados = set()
 fila = PriorityQueue()
-fila.put((0 + h(inicio), custo_inicial, inicio, vetor, n))
-
-predecessores = {}
-vetores = {}
+fila.put((0 + h(inicio, 0), custo_inicial, inicio, vetor, n))
 
 while not fila.empty():
     prioridade, custo, pos, vetor, n = fila.get()
     #print(prioridade, custo, pos, vetor, n)
 
-    visitados.add((pos, vetor, n))
     if pos == final:
         break
 
-    for d in direcoes:
-        nl = pos[0] + d[0]
-        nc = pos[1] + d[1]
-        n_pos = (nl, nc)
-        if nl in [l_max, -1] or nc in [c_max, -1]:
-            continue
-        if d == vetor:
-            n+=1
-            if n > 3:
-                continue
-        else:
-            n = 1
-        if (n_pos, d, n) in visitados:
-            continue
+    if (pos, vetor, n) in visitados:
+        continue
+    visitados.add((pos, vetor, n))
 
-        g = custo + grid[nl][nc]
-        f = g + h(n_pos)
+    #def passo(custo: int, pos: tuple, vetor: tuple, n:int) -> None:
+    if n < 3:
+        passo(custo, (pos[0]+vetor[0], pos[1]+vetor[1]), vetor, n+1)
+    # rotate 90° (a, b) -> (-b, a)
+    passo(custo, (pos[0]-vetor[1], pos[1]+vetor[0]), (-vetor[1], vetor[0]), 1)
+    # rotate -90° (a, b) -> (-b, a)
+    passo(custo, (pos[0]+vetor[1], pos[1]-vetor[0]), (vetor[1], -vetor[0]), 1)
+    #input(f"{fila.queue}")
+print(custo)
 
-        i_f = [ i for i, n in enumerate(fila.queue) if (n[2], n[3], n[4] ) == (n_pos, d, n) ]
 
-        if i_f:
-            if g < fila.queue[i_f[0]][1]:
-                #  prioridade, custo, pos, vetor, n = fila.get()
-                fila.queue[i_f[0]] = (f, g, n_pos, d, n)
-        else:
-            fila.put((f, g, n_pos, d, n))
-        predecessores[n_pos] = g
-        vetores[n_pos] = d
+n=0
+l_max = len(arquivo)
+c_max = len(arquivo[0])
+grid = [[ int(c) for c in linha] for linha in arquivo]
+inicio = (0, 0)
+vetor = (0, 1)
+final = (l_max-1, c_max-1)
+custo_inicial = 0
+visitados = set()
+fila = PriorityQueue()
+fila.put((0 + h(inicio, 0), custo_inicial, inicio, vetor, n))
 
-print(predecessores[final])
+while not fila.empty():
+    prioridade, custo, pos, vetor, n = fila.get()
+    #print(prioridade, custo, pos, vetor, n)
+
+    if pos == final and n>=4:
+        break
+
+    if (pos, vetor, n) in visitados:
+        continue
+    visitados.add((pos, vetor, n))
+
+    #def passo(custo: int, pos: tuple, vetor: tuple, n:int) -> None:
+    if n < 10 :
+        passo(custo, (pos[0]+vetor[0], pos[1]+vetor[1]), vetor, n+1)
+
+    if n >= 4:
+        # rotate 90° (a, b) -> (-b, a)
+        passo(custo, (pos[0]-vetor[1], pos[1]+vetor[0]),
+                (-vetor[1], vetor[0]), 1)
+        # rotate -90° (a, b) -> (-b, a)
+        passo(custo, (pos[0]+vetor[1], pos[1]-vetor[0]),
+                (vetor[1], -vetor[0]), 1)
+
+print(custo, n)
