@@ -8,28 +8,27 @@ from sys import argv
 
 
 def trata_outros(entrada: int) -> tuple:
-    return (1, entrada) if modulo in modulos else (0, entrada) 
+    return (1, entrada)
 
 
-def trata_ff(entrada: int, estado: int) -> tuple:
-    return (0, estado) if entrada else (1, not estado)
+def trata_ff(entrada: int, estado: bool) -> tuple:
+    if entrada:
+        return (0, estado)
+    else:
+        return (1, not estado)
 
 
-def trata_inv(entrada: bool) -> tuple:
+def trata_inv(entrada: bool, estado: bool) -> tuple:
     return (1, not entrada)
 
 
-def trata_con(componente: str, entrada: bool) -> tuple:
-    modulos[modulo]['inputs'].append((componente, entrada))
-    if len(modulos[modulo]['inputs']) == 2:
-        logic = not(modulos[modulo]['inputs'][0][1] &
-                    modulos[modulo]['inputs'][1][1])
-        if logic:
-            return (1, logic)
-        else:
-            return (1, logic)
-    else:
-        return(0, 0)
+
+def trata_con() -> tuple:
+
+    for status in modulos[modulo]['inputs']:
+        if not modulos[status]['state']:
+            return (1, True)
+    return (1, False)
 
 
 def send(tipo: str, componente: str, entrada: int, estado: int) -> int:
@@ -38,12 +37,12 @@ def send(tipo: str, componente: str, entrada: int, estado: int) -> int:
     elif tipo == "ff":
         return trata_ff(entrada, estado)
     elif tipo == "inv":
-        return trata_inv(entrada)
+        return trata_inv(entrada, estado)
     elif tipo == "con":
-        return trata_con(componente, entrada)
+        return trata_con()
 
 
-
+print('--- Day 20: Pulse Propagation ---')
 test = 0 if len(argv) == 2 else 1
 part = "1"
 dia =  argv[0][-5:-3]
@@ -62,28 +61,36 @@ modulos = {i[0] if not i[0][0] in "&%" else i[0][1:]:
 
 for modulo in modulos:
     if modulos[modulo]["type"] == "conjuction":
+        modulos[modulo]['inputs'] = []
         count = 0
         for m in modulos:
             for out in modulos[m]['out']:
                 if out == modulo:
+                    modulos[modulo]["inputs"].append(m)
                     count += 1
         if count == 1:
             modulos[modulo]['type'] = "inv"
         else:
             modulos[modulo]['type'] = "con"
-            modulos[modulo]['inputs'] = []
 modulos["botao"] = {'out': ['broadcaster'], 'state': 0}
 
-nivel_baixo = 0
-nivel_alto = 0
+
+list_part2 = modulos['mf']['inputs']
+
+ans = []
+total_alto = 0
+total_baixo = 0
 sequencia = deque()
-for i in range(3):
+j = 0
+while True:
+    j+=1
+    nivel_baixo = 0
+    nivel_alto = 0
     sequencia.append("botao")
     while sequencia:
         componente = sequencia.popleft()
 
         for modulo in modulos[componente]['out']:
-            #print(send(modulos[modulo]['type'], componente, modulos[componente]['state'], modulos[modulo]['state']))
             if modulos.get(modulo, 0):
                 f, modulos[modulo]['state'] = send(modulos[modulo]['type'],
                                                    componente,
@@ -92,10 +99,37 @@ for i in range(3):
                 if f:
                     sequencia.append(modulo)
 
+
+
             if modulos[componente]['state']:
                 nivel_alto += 1
             else:
                 nivel_baixo += 1
-            input(f"{componente} - {modulos[componente]['state']}-> {modulo}")
-    print(i, nivel_alto)
-    print(i, nivel_baixo)
+
+            if componente in list_part2 and modulos[componente]['state']:
+                list_part2.remove(componente)
+                ans.append(j)
+
+    total_alto += nivel_alto
+    total_baixo += nivel_baixo
+    if len(ans) == 4:
+        break
+    if j == 1000:
+        print("Parte 1:", total_baixo * total_alto )
+
+d = 2
+mmc = 1
+while not all( a == 1 for a in ans):
+    c = 0
+    for i, a in enumerate(ans):
+        if a % d == 0:
+            ans[i] = a/d
+            if c:
+                continue
+            c = 1
+    if c:
+        mmc *= d
+        continue
+    d += 1
+
+print('Parte 2:', mmc)
