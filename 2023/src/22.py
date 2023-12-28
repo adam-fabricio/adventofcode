@@ -4,6 +4,7 @@
 import os
 import re
 from sys import argv
+from copy import deepcopy
 
 
 test = 0 if len(argv) == 2 else 1
@@ -36,12 +37,10 @@ for cs, cubes in enumerate(bricks):
         x, y, z = cube
         bricks[cs][c] = (x, y, z-d_z)
         altura[(x, y)] = z-d_z
-
 #------------------------------------------------------------------------------
 plano_z = {chave: [(x, y, b)    for b, brick in enumerate(bricks)
                                 for x, y, z in brick if z == chave]
                                 for chave in range(1, bricks[-1][-1][-1] + 1)}
-
 
 #------------------------------------------------------------------------------
 apoios = {chave: set() for chave in range(len(bricks))}
@@ -71,4 +70,22 @@ for b1, v1 in apoios.items():
 print("--- Day 22: Sand Slabs ---")
 print("Parte 1:", ans)
 
-#70702
+ans = 0
+n_bricks = deepcopy(bricks)
+for i in range(len(n_bricks)):
+    altura = {}
+    bricks = deepcopy(n_bricks)
+    bricks.pop(i)
+    for cs, cubes in enumerate(bricks):
+        flag = 0
+        d_z = 10000
+        for cube in cubes:
+            x, y, z = cube
+            d_z = min(z - (altura.get((x, y), 0) + 1), d_z)
+        if d_z > 0:
+            ans += 1
+        for c, cube in enumerate(cubes):
+            x, y, z = cube
+            bricks[cs][c] = (x, y, z-d_z)
+            altura[(x, y)] = z-d_z
+print("Parte 2:", ans)
