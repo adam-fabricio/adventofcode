@@ -92,19 +92,26 @@ for i in range(4):
     organizando em X, Y, VX, Z teremos:
 
     (vy2 - vy1) * X + (vy1 - vy2) * Y + (y1 - y2) * VX + (x2 - x1) * VY = \
-            y1*vx1 - x1*vxy + x2vy2 - y2*vx2
+            y1*vx1 - x1*vy1 + x2*vy2 - y2*vx2
 
     Como temos 4 variaveis X, Y, VX, VZ:
 
     Com 4 retas teremos 4 equacoes: 1 - 2, 1-3 e 1-4
     """
-    x1, y1, z1, vx1, vy1, vz1 = granizos[g]
-    x2, y2, z2, vx2, vy2, vz2 = granizos[g+1]
+    x1, y1, z1, vx1, vy1, vz1 = granizos[i]
+    x2, y2, z2, vx2, vy2, vz2 = granizos[i+1]
 
     x = vy2 - x1
-    y = 
-    vx = 
-    vy = 
-    coeficiente_linear = 
-    coeficiente[i].append([
+    y = vy1 - vy2
+    vx = y1 - y2
+    vy = x2 -x1
+    coeficiente_linear = y1 * vx1 - x1 * vy1 + x2*vy2 - y2 * vx2
 
+    coeficientes.append([x, y, vx, vy, coeficiente_linear])
+
+print(coeficientes)
+
+for i in range(len(coeficientes)):
+    pivo = coeficientes[i][i]:
+        for j in range(len(coeficientes)):
+            coeficientes[i][ = oceficientes[i][j]
