@@ -46,7 +46,8 @@ for a in range(len(granizos)-1):
         
         ans += 1
 
-print(ans)
+print("--- Day 24: Never Tell Me The Odds ---")
+print("Parte 1:", ans)
 
 ans = []
 coeficientes = []
@@ -126,15 +127,15 @@ for i in range(linhas):
         fator = coeficientes[k][i]
         for m in range(colunas):
             coeficientes[k][m] = coeficientes[k][m] - fator*coeficientes[i][m]
-x  = coeficientes[0][-1]
-y  = coeficientes[1][-1]
-vx = coeficientes[2][-1]
-vy = coeficientes[3][-1]
+x  = int(coeficientes[0][-1])
+y  = int(coeficientes[1][-1])
+vx = int(coeficientes[2][-1])
+vy = int(coeficientes[3][-1])
 
 coeficientes = []
 
-x1, y1, z1, vx1, vy1, vz1 = granizos[5]
-x2, y2, z2, vx2, vy2, vz2 = granizos[10]
+x1, y1, z1, vx1, vy1, vz1 = granizos[1]
+x2, y2, z2, vx2, vy2, vz2 = granizos[2]
 
 z  = vx - vx1
 vz = x1 - x
@@ -161,11 +162,9 @@ for i in range(linhas):
         for m in range(colunas):
             coeficientes[k][m] = coeficientes[k][m] - fator*coeficientes[i][m]
 
-z  = coeficientes[0][-1]
+z  = int(coeficientes[0][-1])
 vz = coeficientes[1][-1]
 
-print(x, y, z)
-print(x + y + z)
+print("Parte 2:", x + y + z)
 
-#  888708704663413
 
