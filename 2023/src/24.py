@@ -22,8 +22,10 @@ with open(path) as f:
 granizos = [[float(valor) for valor in re.findall("[-]?\d+", linha)]
         for linha in arquivo]
 
-r = [200000000000000, 400000000000000]
-#r = [7, 27]
+if not test:
+    r = [200000000000000, 400000000000000]
+else:
+    r = [7, 27]
 ans = 0
 for a in range(len(granizos)-1):
     m_a = granizos[a][4] / granizos[a][3]
@@ -101,17 +103,69 @@ for i in range(4):
     x1, y1, z1, vx1, vy1, vz1 = granizos[i]
     x2, y2, z2, vx2, vy2, vz2 = granizos[i+1]
 
-    x = vy2 - x1
-    y = vy1 - vy2
+    x = vy2 - vy1
+    y = vx1 - vx2
     vx = y1 - y2
-    vy = x2 -x1
-    coeficiente_linear = y1 * vx1 - x1 * vy1 + x2*vy2 - y2 * vx2
+    vy = x2 - x1
+    coeficiente_linear = y1 * vx1 - x1 * vy1 + x2 * vy2 - y2 * vx2
 
     coeficientes.append([x, y, vx, vy, coeficiente_linear])
 
-print(coeficientes)
 
-for i in range(len(coeficientes)):
-    pivo = coeficientes[i][i]:
-        for j in range(len(coeficientes)):
-            coeficientes[i][ = oceficientes[i][j]
+linhas = len(coeficientes)
+colunas = len(coeficientes[0])
+
+for i in range(linhas):
+    pivo = coeficientes[i][i]
+    for j in range(colunas):
+        coeficientes[i][j] = coeficientes[i][j] / pivo
+
+    for k in range(linhas):
+        if k == i:
+            continue
+        fator = coeficientes[k][i]
+        for m in range(colunas):
+            coeficientes[k][m] = coeficientes[k][m] - fator*coeficientes[i][m]
+x  = coeficientes[0][-1]
+y  = coeficientes[1][-1]
+vx = coeficientes[2][-1]
+vy = coeficientes[3][-1]
+
+coeficientes = []
+
+x1, y1, z1, vx1, vy1, vz1 = granizos[5]
+x2, y2, z2, vx2, vy2, vz2 = granizos[10]
+
+z  = vx - vx1
+vz = x1 - x
+coeficiente_linear = vx * z1 - vx1 * z1 + x1 * vz1 - x * vz1
+coeficientes.append([z, vz, coeficiente_linear])
+
+z  = vx - vx2
+vz = x2 - x
+coeficiente_linear = vx * z2 - vx2 * z2 + x2 * vz2 - x * vz2
+coeficientes.append([z, vz, coeficiente_linear])
+
+linhas = len(coeficientes)
+colunas = len(coeficientes[0])
+
+for i in range(linhas):
+    pivo = coeficientes[i][i]
+    for j in range(colunas):
+        coeficientes[i][j] = coeficientes[i][j] / pivo
+
+    for k in range(linhas):
+        if k == i:
+            continue
+        fator = coeficientes[k][i]
+        for m in range(colunas):
+            coeficientes[k][m] = coeficientes[k][m] - fator*coeficientes[i][m]
+
+z  = coeficientes[0][-1]
+vz = coeficientes[1][-1]
+
+print(x, y, z)
+print(x + y + z)
+
+#  888708704663413
+
