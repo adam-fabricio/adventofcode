@@ -9,11 +9,13 @@ from functools import cache
 
 
 setrecursionlimit(10**6)
+
 def dfs(vertice):
     if vertice == final:
         return 0
 
-    m=-3
+    m = -10000
+
     visitados.add(vertice)
     for n_vertice in vertices[vertice]:
         if n_vertice not in visitados:
@@ -21,6 +23,21 @@ def dfs(vertice):
             #print(m)
     visitados.remove(vertice)
     return m
+
+ans = []
+def dfs_p(vertice, d=0):
+    if vertice in visitados:
+        return
+    visitados.add(vertice)
+
+    if vertice == final:
+        ans.append(d)
+    for n_v in vertices[vertice]:
+        dfs_p(n_v, d+vertices[vertice][n_v])
+    visitados.remove(vertice)
+
+
+
 
 
 test = 0 if len(argv) == 2 else 1
@@ -75,4 +92,20 @@ for v_l, v_c in vertices:
                 fila.append((n_l, n_c, d+1))
                 visitados.add((n_l, n_c))
 visitados = set()
-print(dfs(inicio))
+#dfs_p(inicio)
+
+fila = deque
+fila.append((inicio, 0, visitados))
+
+while fila:
+    vertice, d, visitado = fila.pop()
+
+    if vertice in visitado:
+        continue
+    if vertice == final:
+        ans.append(d)
+
+    for nv in vertices[vertice]:
+        fila.append((nv, d+vertices[vertice][nv], {}.union({(vertice)})))
+
+print(max(ans))
